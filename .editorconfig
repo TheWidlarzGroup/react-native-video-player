@@ -1,0 +1,19 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[**.js]
+indent_style = space
+indent_size = 2
+
+[node_modules/**.js]
+codepaint = false
+
+[*.json]
+indent_style = space
+indent_size = 2
