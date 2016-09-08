@@ -102,6 +102,11 @@ export default class VideoPlayer extends Component {
 
   onEnd() {
     this.player.seek(0);
+    if (!this.props.loop) {
+      this.setState({
+        isPlaying: false,
+      });
+    }
   }
 
   onPlayPress() {
@@ -274,6 +279,7 @@ VideoPlayer.propTypes = {
   muted: PropTypes.bool,
   style: View.propTypes.style,
   controlsTimeout: PropTypes.number,
+  loop: PropTypes.bool,
 };
 
 VideoPlayer.defaultProps = {
@@ -281,4 +287,5 @@ VideoPlayer.defaultProps = {
   videoHeight: 720,
   autoplay: false,
   controlsTimeout: 2000,
+  loop: false,
 };

@@ -26,7 +26,8 @@ react-native link react-native-vector-icons
 | autoplay        | Start the video automatically.                                                              |
 | defaultMuted    | Start the video muted, but allow toggling.                                                  |
 | muted           | Start the video muted and hide the mute toggle button.                                      |
-| controlsTimeout | Timeout when to hide the controls                                                           |
+| controlsTimeout | Timeout when to hide the controls.                                                          |
+| loop            | Loop the video after playback is done.                                                      |
 
 ## Future features
 
