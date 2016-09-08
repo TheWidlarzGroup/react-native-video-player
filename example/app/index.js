@@ -9,9 +9,9 @@ export default class App extends Component {
     super();
 
     this.state = {
-      video: { width: null, height: null, duration: null },
-      thumbnailUrl: null,
-      videoUrl: null,
+      video: { width: undefined, height: undefined, duration: undefined },
+      thumbnailUrl: undefined,
+      videoUrl: undefined,
     };
   }
 
