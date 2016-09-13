@@ -28,6 +28,7 @@ react-native link react-native-vector-icons
 | muted           | Start the video muted and hide the mute toggle button.                                      |
 | controlsTimeout | Timeout when to hide the controls.                                                          |
 | loop            | Loop the video after playback is done.                                                      |
+| resizeMode      | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
 
 ## Future features
 

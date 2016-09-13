@@ -198,7 +198,12 @@ export default class VideoPlayer extends Component {
   }
 
   getVideo() {
-    const { video, style, ...props } = this.props;
+    const {
+      video,
+      style,
+      resizeMode,
+      ...props,
+    } = this.props;
     return (
       <View>
         <Video
@@ -214,7 +219,7 @@ export default class VideoPlayer extends Component {
           onProgress={this.onProgress}
           onEnd={this.onEnd}
           source={video}
-          resizeMode="cover"
+          resizeMode={resizeMode}
         />
         <View
           style={[
@@ -280,6 +285,7 @@ VideoPlayer.propTypes = {
   style: View.propTypes.style,
   controlsTimeout: PropTypes.number,
   loop: PropTypes.bool,
+  resizeMode: Video.propTypes.resizeMode,
 };
 
 VideoPlayer.defaultProps = {
@@ -288,4 +294,5 @@ VideoPlayer.defaultProps = {
   autoplay: false,
   controlsTimeout: 2000,
   loop: false,
+  resizeMode: 'contain',
 };
