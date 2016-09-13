@@ -4,7 +4,7 @@ A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
 
 
-![demo gif](https://github.com/cornedor/react-native-video-player/blob/master/demo.gif "Demo GIF")
+![demo gif](https://storage.googleapis.com/corne-info/images/react-native-video-demo.gif "Demo GIF")
 
 ## Installation
 
@@ -30,18 +30,21 @@ react-native link react-native-vector-icons
 | loop            | Loop the video after playback is done.                                                      |
 | resizeMode      | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
 | customStyles    | The player can be customized with these custom styles:                                      |
-|                 |  - wrapper                                                                                  |
-|                 |  - video                                                                                    |
-|                 |  - controls                                                                                 |
-|                 |  - playControl                                                                              |
-|                 |  - controlButton                                                                            |
-|                 |  - controlIcon                                                                              |
-|                 |  - playIcon                                                                                 |
-|                 |  - seekBar                                                                                  |
-|                 |  - seekBarProgress                                                                          |
-|                 |  - thumbnail                                                                                |
-|                 |  - playButton                                                                               |
-|                 |  - playArrow                                                                                |
+
+### customStyles
+
+ - wrapper
+ - video
+ - controls
+ - playControl
+ - controlButton
+ - controlIcon
+ - playIcon
+ - seekBar
+ - seekBarProgress
+ - thumbnail
+ - playButton
+ - playArrow
 
 ## Future features
 
