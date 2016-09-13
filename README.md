@@ -29,9 +29,22 @@ react-native link react-native-vector-icons
 | controlsTimeout | Timeout when to hide the controls.                                                          |
 | loop            | Loop the video after playback is done.                                                      |
 | resizeMode      | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
+| customStyles    | The player can be customized with these custom styles:                                      |
+|                 |  - wrapper                                                                                  |
+|                 |  - video                                                                                    |
+|                 |  - controls                                                                                 |
+|                 |  - playControl                                                                              |
+|                 |  - controlButton                                                                            |
+|                 |  - controlIcon                                                                              |
+|                 |  - playIcon                                                                                 |
+|                 |  - seekBar                                                                                  |
+|                 |  - seekBarProgress                                                                          |
+|                 |  - thumbnail                                                                                |
+|                 |  - playButton                                                                               |
+|                 |  - playArrow                                                                                |
 
 ## Future features
 
 - [ ] Make seek bar seekable.
-- [ ] Make player customizable.
+- [x] Make player customizable.
 - [ ] Add volume control

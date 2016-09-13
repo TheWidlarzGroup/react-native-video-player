@@ -134,7 +134,7 @@ export default class VideoPlayer extends Component {
   }
 
   getThumbnail() {
-    const { thumbnail, style, ...props } = this.props;
+    const { thumbnail, style, customStyles, ...props } = this.props;
     return (
       <Image
         {...props}
@@ -142,17 +142,19 @@ export default class VideoPlayer extends Component {
           styles.thumbnail,
           this.getSizeStyles(),
           style,
+          customStyles.thumbnail,
         ]}
         source={thumbnail}
       >
-        <TouchableOpacity style={styles.playButton} onPress={this.onStartPress}>
-          <Icon style={styles.playArrow} name="play-arrow" size={42} />
+        <TouchableOpacity style={[styles.playButton, customStyles.playButton]} onPress={this.onStartPress}>
+          <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
         </TouchableOpacity>
       </Image>
     );
   }
 
   getSeekBar(fullWidth) {
+    const { customStyles } = this.props;
     return (
       <View
         style={[
@@ -160,12 +162,14 @@ export default class VideoPlayer extends Component {
             marginHorizontal: fullWidth ? 0 : 10,
             marginTop: fullWidth ? -3 : 0,
           },
+          customStyles.seekBar,
         ]}
       >
         <View
           style={[
             { flex: this.state.progress },
             styles.seekBarProgress,
+            customStyles.seekBarProgress,
           ]}
         />
         <View style={{ flex: 1 - this.state.progress }} />
@@ -174,20 +178,21 @@ export default class VideoPlayer extends Component {
   }
 
   getControls() {
+    const { customStyles } = this.props;
     return (
-      <View style={styles.controls}>
-        <TouchableOpacity onPress={this.onPlayPress}>
+      <View style={[styles.controls, customStyles.controls]}>
+        <TouchableOpacity onPress={this.onPlayPress} style={[customStyles.controlButton, customStyles.playControl]}>
           <Icon
-            style={styles.playControl}
+            style={[styles.playControl, customStyles.controlIcon, customStyles.playIcon]}
             name={this.state.isPlaying ? 'pause' : 'play-arrow'}
             size={32}
           />
         </TouchableOpacity>
         {this.getSeekBar()}
         {this.props.muted ? null : (
-          <TouchableOpacity onPress={this.onMutePress}>
+          <TouchableOpacity onPress={this.onMutePress} style={customStyles.controlButton}>
             <Icon
-              style={styles.extraControl}
+              style={[styles.extraControl, customStyles.controlIcon]}
               name={this.state.isMuted ? 'volume-off' : 'volume-up'}
               size={24}
             />
@@ -202,6 +207,7 @@ export default class VideoPlayer extends Component {
       video,
       style,
       resizeMode,
+      customStyles,
       ...props,
     } = this.props;
     return (
@@ -212,6 +218,7 @@ export default class VideoPlayer extends Component {
             styles.video,
             this.getSizeStyles(),
             style,
+            customStyles.video,
           ]}
           ref={p => { this.player = p; }}
           muted={this.props.muted || this.state.isMuted}
@@ -266,7 +273,7 @@ export default class VideoPlayer extends Component {
 
   render() {
     return (
-      <View onLayout={this.onLayout}>
+      <View onLayout={this.onLayout} style={this.props.customStyles.wrapper}>
         {this.getContent()}
       </View>
     );
@@ -286,6 +293,20 @@ VideoPlayer.propTypes = {
   controlsTimeout: PropTypes.number,
   loop: PropTypes.bool,
   resizeMode: Video.propTypes.resizeMode,
+  customStyles: PropTypes.shape({
+    wrapper: View.propTypes.style,
+    video: Video.propTypes.style,
+    controls: View.propTypes.style,
+    playControl: TouchableOpacity.propTypes.style,
+    controlButton: TouchableOpacity.propTypes.style,
+    controlIcon: Icon.propTypes.style,
+    playIcon: Icon.propTypes.style,
+    seekBar: View.propTypes.style,
+    seekBarProgress: View.propTypes.style,
+    thumbnail: Image.propTypes.style,
+    playButton: TouchableOpacity.propTypes.style,
+    playArrow: Icon.propTypes.style,
+  }),
 };
 
 VideoPlayer.defaultProps = {
@@ -295,4 +316,5 @@ VideoPlayer.defaultProps = {
   controlsTimeout: 2000,
   loop: false,
   resizeMode: 'contain',
+  customStyles: {},
 };
