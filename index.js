@@ -66,12 +66,14 @@ export default class VideoPlayer extends Component {
       progress: 0,
       isMuted: props.defaultMuted,
       isControlsVisible: true,
+      duration: 0,
     };
 
     this.onLayout = this.onLayout.bind(this);
     this.onStartPress = this.onStartPress.bind(this);
     this.onProgress = this.onProgress.bind(this);
     this.onEnd = this.onEnd.bind(this);
+    this.onLoad = this.onLoad.bind(this);
     this.onPlayPress = this.onPlayPress.bind(this);
     this.onMutePress = this.onMutePress.bind(this);
     this.showControls = this.showControls.bind(this);
@@ -94,9 +96,8 @@ export default class VideoPlayer extends Component {
   }
 
   onProgress(event) {
-    const { duration } = this.props;
     this.setState({
-      progress: event.currentTime / (duration || event.playableDuration),
+      progress: event.currentTime / (this.props.duration || this.state.duration),
     });
   }
 
@@ -107,6 +108,11 @@ export default class VideoPlayer extends Component {
         isPlaying: false,
       });
     }
+  }
+
+  onLoad(event) {
+    const { duration } = event;
+    this.setState({ duration });
   }
 
   onPlayPress() {
@@ -225,6 +231,7 @@ export default class VideoPlayer extends Component {
           paused={!this.state.isPlaying}
           onProgress={this.onProgress}
           onEnd={this.onEnd}
+          onLoad={this.onLoad}
           source={video}
           resizeMode={resizeMode}
         />
