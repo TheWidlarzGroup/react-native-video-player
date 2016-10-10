@@ -52,3 +52,4 @@ react-native link react-native-vector-icons
 - [ ] Make seek bar seekable.
 - [x] Make player customizable.
 - [ ] Add volume control
+- [ ] Add fullscreen button
