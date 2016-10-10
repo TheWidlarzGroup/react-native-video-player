@@ -53,3 +53,4 @@ react-native link react-native-vector-icons
 - [x] Make player customizable.
 - [ ] Add volume control
 - [ ] Add fullscreen button
+- [ ] Add loader
