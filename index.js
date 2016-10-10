@@ -65,9 +65,13 @@ export default class VideoPlayer extends Component {
       width: 200,
       progress: 0,
       isMuted: props.defaultMuted,
-      isControlsVisible: true,
+      isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
     };
+
+    if (props.autoplay) {
+      this.hideControls();
+    }
 
     this.onLayout = this.onLayout.bind(this);
     this.onStartPress = this.onStartPress.bind(this);
@@ -300,6 +304,7 @@ VideoPlayer.propTypes = {
   controlsTimeout: PropTypes.number,
   loop: PropTypes.bool,
   resizeMode: Video.propTypes.resizeMode,
+  hideControlsOnStart: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: View.propTypes.style,
     video: Video.propTypes.style,
