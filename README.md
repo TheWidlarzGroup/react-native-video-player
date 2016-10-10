@@ -16,20 +16,21 @@ react-native link react-native-vector-icons
 
 ## Props
 
-| Prop            | Description                                                                                 |
-|-----------------|---------------------------------------------------------------------------------------------|
-| video           | The video source to pass to react-native-video.                                             |
-| thumbnail       | An Image source to use as thumbnail before the video gets loaded.                           |
-| videoWidth      | Width of the video to calculate the player size.                                            |
-| videoHeight     | Height of the video to calculate the player size.                                           |
-| duration        | Duration can not always be figured out (e.g. when using hls), this can be used as fallback. |
-| autoplay        | Start the video automatically.                                                              |
-| defaultMuted    | Start the video muted, but allow toggling.                                                  |
-| muted           | Start the video muted and hide the mute toggle button.                                      |
-| controlsTimeout | Timeout when to hide the controls.                                                          |
-| loop            | Loop the video after playback is done.                                                      |
-| resizeMode      | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
-| customStyles    | The player can be customized with these custom styles:                                      |
+| Prop                | Description                                                                                 |
+|---------------------|---------------------------------------------------------------------------------------------|
+| video               | The video source to pass to react-native-video.                                             |
+| thumbnail           | An Image source to use as thumbnail before the video gets loaded.                           |
+| videoWidth          | Width of the video to calculate the player size.                                            |
+| videoHeight         | Height of the video to calculate the player size.                                           |
+| duration            | Duration can not always be figured out (e.g. when using hls), this can be used as fallback. |
+| autoplay            | Start the video automatically.                                                              |
+| defaultMuted        | Start the video muted, but allow toggling.                                                  |
+| muted               | Start the video muted and hide the mute toggle button.                                      |
+| controlsTimeout     | Timeout when to hide the controls.                                                          |
+| loop                | Loop the video after playback is done.                                                      |
+| resizeMode          | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
+| hideControlsOnStart | Hides the controls on start video.                                                          |
+| customStyles        | The player can be customized with these custom styles:                                      |
 
 ### customStyles
 
