@@ -69,10 +69,6 @@ export default class VideoPlayer extends Component {
       duration: 0,
     };
 
-    if (props.autoplay) {
-      this.hideControls();
-    }
-
     this.onLayout = this.onLayout.bind(this);
     this.onStartPress = this.onStartPress.bind(this);
     this.onProgress = this.onProgress.bind(this);
@@ -81,6 +77,12 @@ export default class VideoPlayer extends Component {
     this.onPlayPress = this.onPlayPress.bind(this);
     this.onMutePress = this.onMutePress.bind(this);
     this.showControls = this.showControls.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.props.autoplay) {
+      this.hideControls();
+    }
   }
 
   onLayout(event) {
