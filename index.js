@@ -108,6 +108,10 @@ export default class VideoPlayer extends Component {
   }
 
   onEnd() {
+    if (this.props.endWithThumbnail) {
+      this.setState({ isStarted: false });
+    }
+
     this.player.seek(0);
     if (!this.props.loop) {
       this.setState({
@@ -158,7 +162,10 @@ export default class VideoPlayer extends Component {
         ]}
         source={thumbnail}
       >
-        <TouchableOpacity style={[styles.playButton, customStyles.playButton]} onPress={this.onStartPress}>
+        <TouchableOpacity
+          style={[styles.playButton, customStyles.playButton]}
+          onPress={this.onStartPress}
+        >
           <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
         </TouchableOpacity>
       </Image>
@@ -193,7 +200,10 @@ export default class VideoPlayer extends Component {
     const { customStyles } = this.props;
     return (
       <View style={[styles.controls, customStyles.controls]}>
-        <TouchableOpacity onPress={this.onPlayPress} style={[customStyles.controlButton, customStyles.playControl]}>
+        <TouchableOpacity
+          onPress={this.onPlayPress}
+          style={[customStyles.controlButton, customStyles.playControl]}
+        >
           <Icon
             style={[styles.playControl, customStyles.controlIcon, customStyles.playIcon]}
             name={this.state.isPlaying ? 'pause' : 'play-arrow'}
@@ -220,7 +230,7 @@ export default class VideoPlayer extends Component {
       style,
       resizeMode,
       customStyles,
-      ...props,
+      ...props
     } = this.props;
     return (
       <View>
@@ -307,6 +317,7 @@ VideoPlayer.propTypes = {
   loop: PropTypes.bool,
   resizeMode: Video.propTypes.resizeMode,
   hideControlsOnStart: PropTypes.bool,
+  endWithThumbnail: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: View.propTypes.style,
     video: Video.propTypes.style,

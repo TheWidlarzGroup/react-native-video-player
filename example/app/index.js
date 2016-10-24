@@ -30,6 +30,7 @@ export default class App extends Component {
       <View>
         <Text style={{ fontSize: 22, marginTop: 22 }}>React Native Video Player</Text>
         <VideoPlayer
+          endWithThumbnail
           thumbnail={{ uri: this.state.thumbnailUrl }}
           video={{ uri: this.state.videoUrl }}
           videoWidth={this.state.video.width}
