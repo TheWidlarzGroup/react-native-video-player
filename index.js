@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   seekBar: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     height: 3,
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'row',
   },
   seekBarProgress: {
@@ -186,12 +186,12 @@ export default class VideoPlayer extends Component {
       >
         <View
           style={[
-            { flex: this.state.progress },
+            { flexGrow: this.state.progress },
             styles.seekBarProgress,
             customStyles.seekBarProgress,
           ]}
         />
-        <View style={{ flex: 1 - this.state.progress }} />
+      <View style={{ flexGrow: 1 - this.state.progress }} />
       </View>
     );
   }
