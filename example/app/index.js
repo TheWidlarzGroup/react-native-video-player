@@ -20,7 +20,7 @@ export default class App extends Component {
       .then(res => res.json())
       .then(res => this.setState({
         thumbnailUrl: res.video.thumbs['640'],
-        videoUrl: res.request.files.hls.url,
+        videoUrl: res.request.files.hls.cdns[res.request.files.hls.default_cdn].url,
         video: res.video,
       }));
   }
