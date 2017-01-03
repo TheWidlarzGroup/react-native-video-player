@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
 
@@ -77,6 +77,7 @@ export default class VideoPlayer extends Component {
     this.onPlayPress = this.onPlayPress.bind(this);
     this.onMutePress = this.onMutePress.bind(this);
     this.showControls = this.showControls.bind(this);
+    this.onToggleFullScreen = this.onToggleFullScreen.bind(this);
   }
 
   componentDidMount() {
@@ -137,6 +138,10 @@ export default class VideoPlayer extends Component {
       isMuted: !this.state.isMuted,
     });
     this.showControls();
+  }
+  
+  onToggleFullScreen() {
+    this.player.presentFullscreenPlayer();
   }
 
   getSizeStyles() {
@@ -217,6 +222,15 @@ export default class VideoPlayer extends Component {
               style={[styles.extraControl, customStyles.controlIcon]}
               name={this.state.isMuted ? 'volume-off' : 'volume-up'}
               size={24}
+            />
+          </TouchableOpacity>
+        )}
+        {(Platform.OS === 'android') ? null : (
+          <TouchableOpacity onPress={this.onToggleFullScreen} style={customStyles.controlButton}>
+            <Icon
+              style={[styles.extraControl, customStyles.controlIcon]}
+              name='fullscreen'
+              size={32}
             />
           </TouchableOpacity>
         )}
