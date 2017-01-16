@@ -139,7 +139,7 @@ export default class VideoPlayer extends Component {
     });
     this.showControls();
   }
-  
+
   onToggleFullScreen() {
     this.player.presentFullscreenPlayer();
   }
@@ -154,7 +154,36 @@ export default class VideoPlayer extends Component {
     };
   }
 
-  getThumbnail() {
+  hideControls() {
+    if (this.controlsTimeout) {
+      clearTimeout(this.controlsTimeout);
+      this.controlsTimeout = null;
+    }
+    this.controlsTimeout = setTimeout(() => {
+      this.setState({ isControlsVisible: false });
+    }, this.props.controlsTimeout);
+  }
+
+  showControls() {
+    this.setState({
+      isControlsVisible: true,
+    });
+    this.hideControls();
+  }
+
+  renderStartButton() {
+    const { customStyles } = this.props;
+    return (
+      <TouchableOpacity
+        style={[styles.playButton, customStyles.playButton]}
+        onPress={this.onStartPress}
+      >
+        <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
+      </TouchableOpacity>
+    );
+  }
+
+  renderThumbnail() {
     const { thumbnail, style, customStyles, ...props } = this.props;
     return (
       <Image
@@ -167,17 +196,12 @@ export default class VideoPlayer extends Component {
         ]}
         source={thumbnail}
       >
-        <TouchableOpacity
-          style={[styles.playButton, customStyles.playButton]}
-          onPress={this.onStartPress}
-        >
-          <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
-        </TouchableOpacity>
+        {this.renderStartButton()}
       </Image>
     );
   }
 
-  getSeekBar(fullWidth) {
+  renderSeekBar(fullWidth) {
     const { customStyles } = this.props;
     return (
       <View
@@ -196,12 +220,12 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
-      <View style={{ flexGrow: 1 - this.state.progress }} />
+        <View style={{ flexGrow: 1 - this.state.progress }} />
       </View>
     );
   }
 
-  getControls() {
+  renderControls() {
     const { customStyles } = this.props;
     return (
       <View style={[styles.controls, customStyles.controls]}>
@@ -215,7 +239,7 @@ export default class VideoPlayer extends Component {
             size={32}
           />
         </TouchableOpacity>
-        {this.getSeekBar()}
+        {this.renderSeekBar()}
         {this.props.muted ? null : (
           <TouchableOpacity onPress={this.onMutePress} style={customStyles.controlButton}>
             <Icon
@@ -229,7 +253,7 @@ export default class VideoPlayer extends Component {
           <TouchableOpacity onPress={this.onToggleFullScreen} style={customStyles.controlButton}>
             <Icon
               style={[styles.extraControl, customStyles.controlIcon]}
-              name='fullscreen'
+              name="fullscreen"
               size={32}
             />
           </TouchableOpacity>
@@ -238,7 +262,7 @@ export default class VideoPlayer extends Component {
     );
   }
 
-  getVideo() {
+  renderVideo() {
     const {
       video,
       style,
@@ -274,44 +298,27 @@ export default class VideoPlayer extends Component {
           <TouchableOpacity style={styles.overlayButton} onPress={this.showControls} />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
-          ? this.getControls() : this.getSeekBar(true)}
+          ? this.renderControls() : this.renderSeekBar(true)}
       </View>
     );
   }
 
-  getContent() {
+  renderContent() {
     const { thumbnail, style } = this.props;
     const { isStarted } = this.state;
 
     if (!isStarted && thumbnail) {
-      return this.getThumbnail();
+      return this.renderThumbnail();
     } else if (!isStarted) {
       return <View style={[styles.preloadingPlaceholder, this.getSizeStyles(), style]} />;
     }
-    return this.getVideo();
-  }
-
-  hideControls() {
-    if (this.controlsTimeout) {
-      clearTimeout(this.controlsTimeout);
-      this.controlsTimeout = null;
-    }
-    this.controlsTimeout = setTimeout(() => {
-      this.setState({ isControlsVisible: false });
-    }, this.props.controlsTimeout);
-  }
-
-  showControls() {
-    this.setState({
-      isControlsVisible: true,
-    });
-    this.hideControls();
+    return this.renderVideo();
   }
 
   render() {
     return (
       <View onLayout={this.onLayout} style={this.props.customStyles.wrapper}>
-        {this.getContent()}
+        {this.renderContent()}
       </View>
     );
   }
