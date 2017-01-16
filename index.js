@@ -6,6 +6,8 @@ import Video from 'react-native-video'; // eslint-disable-line
 const styles = StyleSheet.create({
   preloadingPlaceholder: {
     backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   thumbnail: {
     backgroundColor: 'black',
@@ -310,7 +312,11 @@ export default class VideoPlayer extends Component {
     if (!isStarted && thumbnail) {
       return this.renderThumbnail();
     } else if (!isStarted) {
-      return <View style={[styles.preloadingPlaceholder, this.getSizeStyles(), style]} />;
+      return (
+        <View style={[styles.preloadingPlaceholder, this.getSizeStyles(), style]}>
+          {this.renderStartButton()}
+        </View>
+      );
     }
     return this.renderVideo();
   }
