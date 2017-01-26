@@ -33,6 +33,8 @@ react-native link react-native-vector-icons
 | endWithThumbnail    | Returns to the thumbnail after the video ends.                                              |
 | customStyles        | The player can be customized with these custom styles:                                      |
 
+All other props are passed to the react-native-video component.
+
 ### customStyles
 
  - wrapper

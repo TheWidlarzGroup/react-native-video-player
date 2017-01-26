@@ -105,12 +105,19 @@ export default class VideoPlayer extends Component {
   }
 
   onProgress(event) {
+    if (this.props.onProgress) {
+      this.props.onProgress(event);
+    }
     this.setState({
       progress: event.currentTime / (this.props.duration || this.state.duration),
     });
   }
 
-  onEnd() {
+  onEnd(event) {
+    if (this.props.onEnd) {
+      this.props.onEnd(event);
+    }
+
     if (this.props.endWithThumbnail) {
       this.setState({ isStarted: false });
     }
@@ -124,6 +131,10 @@ export default class VideoPlayer extends Component {
   }
 
   onLoad(event) {
+    if (this.props.onLoad) {
+      this.props.onLoad(event);
+    }
+
     const { duration } = event;
     this.setState({ duration });
   }
@@ -359,6 +370,9 @@ VideoPlayer.propTypes = {
     playButton: TouchableOpacity.propTypes.style,
     playArrow: Icon.propTypes.style,
   }),
+  onEnd: PropTypes.func,
+  onProgress: PropTypes.func,
+  onLoad: PropTypes.func,
 };
 
 VideoPlayer.defaultProps = {
