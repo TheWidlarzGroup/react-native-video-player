@@ -20,7 +20,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-vector-icons": ">= 2.1.0",
-    "react-native-video": "^0.9.0"
+    "react-native-video": "^0.9.0 || ^1.0.0"
   },
   "devDependencies": {
     "eslint": "^3.4.0",
