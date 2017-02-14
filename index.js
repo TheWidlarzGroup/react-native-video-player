@@ -307,6 +307,7 @@ export default class VideoPlayer extends Component {
               this.state.isSeeking ? { transform: [{ scale: 1 }] } : {},
               this.state.isSeeking ? customStyles.seekBarKnobSeeking : {},
             ]}
+            hitSlop={{ top: 20, bottom: 20, left: 10, right: 20 }}
             onStartShouldSetResponder={this.onSeekStartResponder}
             onMoveShouldSetPanResponder={this.onSeekMoveResponder}
             onResponderGrant={this.onSeekGrant}
