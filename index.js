@@ -52,6 +52,15 @@ const styles = StyleSheet.create({
   seekBarProgress: {
     backgroundColor: '#F00',
   },
+  seekBarKnob: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginHorizontal: -10,
+    marginVertical: -8.5,
+    backgroundColor: '#F00',
+    transform: [{ scale: 0.8 }],
+  },
   overlayButton: {
     flex: 1,
   },
@@ -69,7 +78,13 @@ export default class VideoPlayer extends Component {
       isMuted: props.defaultMuted,
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
+      isSeeking: false,
     };
+
+    this.seekBarWidth = 200;
+    this.wasPlayingBeforeSeek = props.autoplay;
+    this.seekTouchStart = 0;
+    this.seekProgressStart = 0;
 
     this.onLayout = this.onLayout.bind(this);
     this.onStartPress = this.onStartPress.bind(this);
@@ -80,6 +95,10 @@ export default class VideoPlayer extends Component {
     this.onMutePress = this.onMutePress.bind(this);
     this.showControls = this.showControls.bind(this);
     this.onToggleFullScreen = this.onToggleFullScreen.bind(this);
+    this.onSeekBarLayout = this.onSeekBarLayout.bind(this);
+    this.onSeekGrant = this.onSeekGrant.bind(this);
+    this.onSeekRelease = this.onSeekRelease.bind(this);
+    this.onSeek = this.onSeek.bind(this);
   }
 
   componentDidMount() {
@@ -105,6 +124,9 @@ export default class VideoPlayer extends Component {
   }
 
   onProgress(event) {
+    if (this.state.isSeeking) {
+      return;
+    }
     if (this.props.onProgress) {
       this.props.onProgress(event);
     }
@@ -155,6 +177,49 @@ export default class VideoPlayer extends Component {
 
   onToggleFullScreen() {
     this.player.presentFullscreenPlayer();
+  }
+
+  onSeekBarLayout({ nativeEvent }) {
+    this.seekBarWidth = nativeEvent.layout.width;
+  }
+
+  onSeekStartResponder() {
+    return true;
+  }
+
+  onSeekMoveResponder() {
+    return true;
+  }
+
+  onSeekGrant(e) {
+    this.seekTouchStart = e.nativeEvent.pageX;
+    this.seekProgressStart = this.state.progress;
+    this.wasPlayingBeforeSeek = this.state.isPlaying;
+    this.setState({
+      isSeeking: true,
+      isPlaying: false,
+    });
+  }
+
+  onSeekRelease() {
+    this.setState({
+      isSeeking: false,
+      isPlaying: this.wasPlayingBeforeSeek,
+    });
+    this.showControls();
+  }
+
+  onSeek(e) {
+    const diff = e.nativeEvent.pageX - this.seekTouchStart;
+    const ratio = 100 / this.seekBarWidth;
+    const progress = this.seekProgressStart + ((ratio * diff) / 100);
+
+
+    this.setState({
+      progress,
+    });
+
+    this.player.seek(progress * this.state.duration);
   }
 
   getSizeStyles() {
@@ -225,6 +290,7 @@ export default class VideoPlayer extends Component {
           },
           customStyles.seekBar,
         ]}
+        onLayout={this.onSeekBarLayout}
       >
         <View
           style={[
@@ -233,6 +299,22 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
+        { !fullWidth ? (
+          <View
+            style={[
+              styles.seekBarKnob,
+              customStyles.seekBarKnob,
+              this.state.isSeeking ? { transform: [{ scale: 1 }] } : {},
+              this.state.isSeeking ? customStyles.seekBarKnobSeeking : {},
+            ]}
+            onStartShouldSetResponder={this.onSeekStartResponder}
+            onMoveShouldSetPanResponder={this.onSeekMoveResponder}
+            onResponderGrant={this.onSeekGrant}
+            onResponderMove={this.onSeek}
+            onResponderRelease={this.onSeekRelease}
+            onResponderTerminate={this.onSeekRelease}
+          />
+        ) : null }
         <View style={{ flexGrow: 1 - this.state.progress }} />
       </View>
     );
@@ -366,6 +448,8 @@ VideoPlayer.propTypes = {
     playIcon: Icon.propTypes.style,
     seekBar: View.propTypes.style,
     seekBarProgress: View.propTypes.style,
+    seekBarKnob: View.propTypes.style,
+    seekBarKnobSeeking: View.propTypes.style,
     thumbnail: Image.propTypes.style,
     playButton: TouchableOpacity.propTypes.style,
     playArrow: Icon.propTypes.style,

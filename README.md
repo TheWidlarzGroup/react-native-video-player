@@ -46,14 +46,16 @@ All other props are passed to the react-native-video component.
  - playIcon
  - seekBar
  - seekBarProgress
+ - seekBarKnob
  - thumbnail
  - playButton
  - playArrow
 
 ## Future features
 
-- [ ] Make seek bar seekable.
+- [X] Make seek bar seekable.
 - [x] Make player customizable.
 - [ ] Add volume control
-- [ ] Add fullscreen button
+- [X] Add fullscreen button
+  - [ ] Add fullscreen button for android
 - [ ] Add loader
