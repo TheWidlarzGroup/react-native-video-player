@@ -1,3 +1,11 @@
+## 0.6.1
+ - Added a hitSlop to the seek bar knob.
+ - Fixed the seek bar on android.
+ - Changed the way the seek bar is build up. There are new customStyles called `seekBarFullWidth`
+   and `seekBarBackground`. A part of the script needs the width of the seek bar. The padding is
+   added to this width by by reading paddingHorizontal or paddingLeft and paddingRight from the
+   custom `seekBar` styles.
+
 ## 0.6.0
  - The seekBar is now seek-able.
  - Added `seekBarKnob` to `customStyles` to style the seek bar knob.

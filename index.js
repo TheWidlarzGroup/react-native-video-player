@@ -44,22 +44,38 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   seekBar: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    height: 3,
+    alignItems: 'center',
+    height: 30,
     flexGrow: 1,
     flexDirection: 'row',
+    paddingHorizontal: 10,
+    marginLeft: -10,
+    marginRight: -5,
+  },
+  seekBarFullWidth: {
+    marginLeft: 0,
+    marginRight: 0,
+    paddingHorizontal: 0,
+    marginTop: -3,
+    height: 3,
   },
   seekBarProgress: {
+    height: 3,
     backgroundColor: '#F00',
   },
   seekBarKnob: {
     width: 20,
     height: 20,
+    marginHorizontal: -8,
+    marginVertical: -10,
     borderRadius: 10,
-    marginHorizontal: -10,
-    marginVertical: -8.5,
     backgroundColor: '#F00',
     transform: [{ scale: 0.8 }],
+    zIndex: 1,
+  },
+  seekBarBackground: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    height: 3,
   },
   overlayButton: {
     flex: 1,
@@ -180,7 +196,18 @@ export default class VideoPlayer extends Component {
   }
 
   onSeekBarLayout({ nativeEvent }) {
-    this.seekBarWidth = nativeEvent.layout.width;
+    const customStyle = this.props.customStyles.seekBar;
+    let padding = 0;
+    if (customStyle && customStyle.paddingHorizontal) {
+      padding = customStyle.paddingHorizontal * 2;
+    } else if (customStyle) {
+      padding = customStyle.paddingLeft || 0;
+      padding += customStyle.paddingRight ? customStyle.paddingRight : 0;
+    } else {
+      padding = 20;
+    }
+
+    this.seekBarWidth = nativeEvent.layout.width - padding;
   }
 
   onSeekStartResponder() {
@@ -213,7 +240,6 @@ export default class VideoPlayer extends Component {
     const diff = e.nativeEvent.pageX - this.seekTouchStart;
     const ratio = 100 / this.seekBarWidth;
     const progress = this.seekProgressStart + ((ratio * diff) / 100);
-
 
     this.setState({
       progress,
@@ -284,11 +310,10 @@ export default class VideoPlayer extends Component {
     return (
       <View
         style={[
-          styles.seekBar, {
-            marginHorizontal: fullWidth ? 0 : 10,
-            marginTop: fullWidth ? -3 : 0,
-          },
+          styles.seekBar,
+          fullWidth ? styles.seekBarFullWidth : {},
           customStyles.seekBar,
+          fullWidth ? customStyles.seekBarFullWidth : {},
         ]}
         onLayout={this.onSeekBarLayout}
       >
@@ -316,7 +341,7 @@ export default class VideoPlayer extends Component {
             onResponderTerminate={this.onSeekRelease}
           />
         ) : null }
-        <View style={{ flexGrow: 1 - this.state.progress }} />
+        <View style={[styles.seekBarBackground, { flexGrow: 1 - this.state.progress }]} />
       </View>
     );
   }
@@ -448,9 +473,11 @@ VideoPlayer.propTypes = {
     controlIcon: Icon.propTypes.style,
     playIcon: Icon.propTypes.style,
     seekBar: View.propTypes.style,
+    seekBarFullWidth: View.propTypes.style,
     seekBarProgress: View.propTypes.style,
     seekBarKnob: View.propTypes.style,
     seekBarKnobSeeking: View.propTypes.style,
+    seekBarBackground: View.propTypes.style,
     thumbnail: Image.propTypes.style,
     playButton: TouchableOpacity.propTypes.style,
     playArrow: Icon.propTypes.style,

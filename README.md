@@ -45,8 +45,10 @@ All other props are passed to the react-native-video component.
  - controlIcon
  - playIcon
  - seekBar
+ - seekBarFullWidth
  - seekBarProgress
  - seekBarKnob
+ - seekBarBackground
  - thumbnail
  - playButton
  - playArrow
