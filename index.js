@@ -259,6 +259,10 @@ export default class VideoPlayer extends Component {
   }
 
   hideControls() {
+    if (this.props.disableControlsAutoHide) {
+      return;
+    }
+
     if (this.controlsTimeout) {
       clearTimeout(this.controlsTimeout);
       this.controlsTimeout = null;
@@ -464,6 +468,7 @@ VideoPlayer.propTypes = {
   muted: PropTypes.bool,
   style: View.propTypes.style,
   controlsTimeout: PropTypes.number,
+  disableControlsAutoHide: PropTypes.bool,
   loop: PropTypes.bool,
   resizeMode: Video.propTypes.resizeMode,
   hideControlsOnStart: PropTypes.bool,
