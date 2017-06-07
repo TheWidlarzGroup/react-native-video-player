@@ -1,3 +1,9 @@
+## 0.7.0
+ - Fixed actually using `seekBarBackground` from custom style.
+ - Fixed a setState after unmount
+ - Added `videoWrapper` custom style.
+ - Added `disableControlsAutoHide` prop that stops the controls from hiding after the timeout.
+
 ## 0.6.1
  - Added a hitSlop to the seek bar knob.
  - Fixed the seek bar on android.
