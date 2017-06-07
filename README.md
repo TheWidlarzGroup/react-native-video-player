@@ -52,6 +52,7 @@ All other props are passed to the react-native-video component.
  - thumbnail
  - playButton
  - playArrow
+ - videoWrapper
 
 ## Future features
 

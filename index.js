@@ -396,7 +396,7 @@ export default class VideoPlayer extends Component {
       ...props
     } = this.props;
     return (
-      <View>
+      <View style={customStyles.videoWrapper}>
         <Video
           {...props}
           style={[
@@ -471,6 +471,7 @@ VideoPlayer.propTypes = {
   customStyles: PropTypes.shape({
     wrapper: View.propTypes.style,
     video: Video.propTypes.style,
+    videoWrapper: View.propTypes.style,
     controls: View.propTypes.style,
     playControl: TouchableOpacity.propTypes.style,
     controlButton: TouchableOpacity.propTypes.style,
