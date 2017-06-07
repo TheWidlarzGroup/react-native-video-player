@@ -341,7 +341,11 @@ export default class VideoPlayer extends Component {
             onResponderTerminate={this.onSeekRelease}
           />
         ) : null }
-        <View style={[styles.seekBarBackground, { flexGrow: 1 - this.state.progress }]} />
+        <View style={[
+          styles.seekBarBackground,
+          { flexGrow: 1 - this.state.progress },
+          customStyles.seekBarBackground,
+        ]} />
       </View>
     );
   }
