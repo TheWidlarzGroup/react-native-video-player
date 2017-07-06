@@ -9,7 +9,7 @@ react-native-video for the video playback.
 ## Installation
 
 ```
-npm install --save react-native-video-player
+npm install --save react-native-video-player react-native-video react-native-vector-icons
 react-native link react-native-video
 react-native link react-native-vector-icons
 ```
