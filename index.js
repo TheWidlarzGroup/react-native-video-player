@@ -138,6 +138,10 @@ export default class VideoPlayer extends Component {
   }
 
   onStartPress() {
+    if (this.props.onStart) {
+      this.props.onStart();
+    }
+
     this.setState({
       isPlaying: true,
       isStarted: true,
@@ -504,6 +508,7 @@ VideoPlayer.propTypes = {
   onEnd: PropTypes.func,
   onProgress: PropTypes.func,
   onLoad: PropTypes.func,
+  onStart: PropTypes.func,
 };
 
 VideoPlayer.defaultProps = {
