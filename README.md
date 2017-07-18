@@ -61,5 +61,32 @@ All other props are passed to the react-native-video component.
 - [x] Make player customizable.
 - [ ] Add volume control
 - [X] Add fullscreen button
-  - [ ] Add fullscreen button for android
+  - [X] Add fullscreen button for android
 - [ ] Add loader
+
+## Setting up fullscreen on Android
+
+Step 1:
+
+Go to your ```android\app\src\main\java\your\package\directory``` folder where you can find ```MainActivity.java```. Copy the java files from the repo's  ```android\app\src\main\java``` folder and paste them there. Open those files in any editor(Android Studio recommended) and change the package names according to your project. After that, go to your ```MainApplication.java``` file 
+and under the ```new MainReactPackage()```, copy and paste this: ```new BridgePackage()``` and it should look similar to the code below if you do not have other packages.
+```
+@Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new BridgePackage()
+          );
+     }
+```
+Step 2: 
+
+Make a folder in your ```android\app\src\main\res``` directory and name it ```layout```, then copy the player_fullscreen.xml from the repo's ```android\app\src\main\res\layout``` directory and paste it into your directory and then go to your ```AndroidManifest.xml``` and add this before the ending application tag: 
+            ```
+            <activity android:name=".VideoActivity"
+               android:screenOrientation="sensorLandscape"
+               android:configChanges="orientation|screenSize"
+            />
+            ```
+            
+And then your fullscreen should be working and ready to go!
