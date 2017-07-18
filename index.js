@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Platform, NativeModules } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Video from 'react-native-video'; // eslint-disable-line
-
+import Video from 'react-native-video';
 const styles = StyleSheet.create({
   preloadingPlaceholder: {
     backgroundColor: 'black',
@@ -167,8 +166,6 @@ export default class VideoPlayer extends Component {
       this.setState({ isStarted: false });
     }
 
-    this.setState({ progress: 1 });
-
     this.player.seek(0);
     if (!this.props.loop) {
       this.setState({
@@ -201,7 +198,15 @@ export default class VideoPlayer extends Component {
   }
 
   onToggleFullScreen() {
-    this.player.presentFullscreenPlayer();
+    if(Platform.OS === "android")
+    {
+      var uri = this.props.video.uri;
+      NativeModules.BridgeActivity.showFullscreen(uri);
+    }
+    else
+    {
+      this.player.presentFullscreenPlayer();
+    }
   }
 
   onSeekBarLayout({ nativeEvent }) {
@@ -387,15 +392,13 @@ export default class VideoPlayer extends Component {
             />
           </TouchableOpacity>
         )}
-        {(Platform.OS === 'android') ? null : (
-          <TouchableOpacity onPress={this.onToggleFullScreen} style={customStyles.controlButton}>
-            <Icon
-              style={[styles.extraControl, customStyles.controlIcon]}
-              name="fullscreen"
-              size={32}
-            />
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity onPress={this.onToggleFullScreen} style={customStyles.controlButton}>
+          <Icon
+            style={[styles.extraControl, customStyles.controlIcon]}
+            name="fullscreen"
+            size={32}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
