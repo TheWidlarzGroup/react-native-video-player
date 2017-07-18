@@ -88,6 +88,9 @@ Make a folder in your ```android\app\src\main\res``` directory and name it ```la
                android:configChanges="orientation|screenSize"
             />
             ```
-If you want to remove the action bar, change your theme or change the theme for your activity from the manifest            
+            
+           
+If you want to remove the action bar, change your theme or change the theme for your activity from the manifest     
+
 And then your fullscreen should be working and ready to go!
 
