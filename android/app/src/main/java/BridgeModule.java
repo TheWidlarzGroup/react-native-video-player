@@ -1,4 +1,4 @@
-package se.mralbert.albert2;
+package com.my.package;
 
 import android.content.Context;
 import android.content.Intent;
