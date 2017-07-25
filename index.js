@@ -192,6 +192,10 @@ export default class VideoPlayer extends Component {
   }
 
   onPlayPress() {
+    if (this.props.onPlayPress) {
+      this.props.onPlayPress();
+    }
+
     this.setState({
       isPlaying: !this.state.isPlaying,
     });
@@ -273,6 +277,10 @@ export default class VideoPlayer extends Component {
   }
 
   hideControls() {
+    if (this.props.onHideControls) {
+      this.props.onHideControls();
+    }
+
     if (this.props.disableControlsAutoHide) {
       return;
     }
@@ -287,6 +295,10 @@ export default class VideoPlayer extends Component {
   }
 
   showControls() {
+    if (this.props.onShowControls) {
+      this.props.onShowControls();
+    }
+
     this.setState({
       isControlsVisible: true,
     });
@@ -392,7 +404,7 @@ export default class VideoPlayer extends Component {
             />
           </TouchableOpacity>
         )}
-        {(Platform.OS === 'android') ? null : (
+        {(Platform.OS === 'android' || this.props.disableFullscreen) ? null : (
           <TouchableOpacity onPress={this.onToggleFullScreen} style={customStyles.controlButton}>
             <Icon
               style={[styles.extraControl, customStyles.controlIcon]}
@@ -483,6 +495,7 @@ VideoPlayer.propTypes = {
   style: ViewPropTypes.style,
   controlsTimeout: PropTypes.number,
   disableControlsAutoHide: PropTypes.bool,
+  disableFullscreen: PropTypes.bool,
   loop: PropTypes.bool,
   resizeMode: Video.propTypes.resizeMode,
   hideControlsOnStart: PropTypes.bool,
@@ -510,6 +523,9 @@ VideoPlayer.propTypes = {
   onProgress: PropTypes.func,
   onLoad: PropTypes.func,
   onStart: PropTypes.func,
+  onPlayPress: PropTypes.func,
+  onHideControls: PropTypes.func,
+  onShowControls: PropTypes.func,
 };
 
 VideoPlayer.defaultProps = {
