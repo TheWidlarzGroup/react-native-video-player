@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-player",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A video player for React Native with controls",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
   "license": "ISC",
   "repository": "cornedor/react-native-video-player",
   "peerDependencies": {
+    "prop-types": "*",
     "react": "*",
     "react-native": "*",
     "react-native-vector-icons": ">= 2.1.0",

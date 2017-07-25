@@ -27,12 +27,17 @@ react-native link react-native-vector-icons
 | defaultMuted            | Start the video muted, but allow toggling.                                                  |
 | muted                   | Start the video muted and hide the mute toggle button.                                      |
 | controlsTimeout         | Timeout when to hide the controls.                                                          |
-| disableControlsAutoHide | Disable auto hiding the controls.
+| disableControlsAutoHide | Disable auto hiding the controls.                                                           |
+| disableFullscreen       | Disable the fullscreen button.                                                              |
 | loop                    | Loop the video after playback is done.                                                      |
 | resizeMode              | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
 | hideControlsOnStart     | Hides the controls on start video.                                                          |
 | endWithThumbnail        | Returns to the thumbnail after the video ends.                                              |
-| customStyles            | The player can be customized with these custom styles:                                      |
+| onStart                 | Callback for when the start button is pressed.                                              |
+| onPlayPress             | Callback for when the play button is pressed.                                               |
+| onHideControls          | Callback for when the controls are being hide.                                              |
+| onShowControls          | Callback for when the controls are being shown.                                             |
+| customStyles            | The player can be customized in this object, see customStyles for the options.              |
 
 All other props are passed to the react-native-video component.
 

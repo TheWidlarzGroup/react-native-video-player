@@ -1,3 +1,9 @@
+## 0.8.0
+ - Updated to react native 0.46.4 and fixed PropTypes (thanks @Traviskn).
+ - Added `onStart` property (thanks @gvillenave).
+ - Added `onPlayPress`, `onHideControls`, `onShowControls` callbacks.
+ - Added `disableFullscreen` prop.
+
 ## 0.7.0
  - Fixed actually using `seekBarBackground` from custom style.
  - Fixed a setState after unmount
