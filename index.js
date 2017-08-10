@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   playArrow: {
     color: 'white',
   },
-  video: {
+  video: Platform.Version === 25 ? {} : {
     backgroundColor: 'black',
   },
   controls: {
