@@ -336,7 +336,7 @@ export default class VideoPlayer extends Component {
   }
 
   renderSeekBar(fullWidth) {
-    const { customStyles } = this.props;
+    const { customStyles, disableSeek } = this.props;
     return (
       <View
         style={[
@@ -354,7 +354,7 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
-        { !fullWidth ? (
+        { !fullWidth && !disableSeek ? (
           <View
             style={[
               styles.seekBarKnob,
@@ -500,6 +500,7 @@ VideoPlayer.propTypes = {
   resizeMode: Video.propTypes.resizeMode,
   hideControlsOnStart: PropTypes.bool,
   endWithThumbnail: PropTypes.bool,
+  disableSeek: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -535,5 +536,6 @@ VideoPlayer.defaultProps = {
   controlsTimeout: 2000,
   loop: false,
   resizeMode: 'contain',
+  disableSeek: false,
   customStyles: {},
 };
