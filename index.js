@@ -423,6 +423,7 @@ export default class VideoPlayer extends Component {
       style,
       resizeMode,
       pauseOnPress,
+      fullScreenOnLongPress,
       customStyles,
       ...props
     } = this.props;
@@ -457,8 +458,11 @@ export default class VideoPlayer extends Component {
               this.showControls();
               if (pauseOnPress)
                 this.onPlayPress();
-              }
-            } 
+            }}
+            onLongPress={() => {
+              if (fullScreenOnLongPress && Platform.OS !== 'android')
+                this.onToggleFullScreen();
+            }} 
           />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
@@ -511,6 +515,7 @@ VideoPlayer.propTypes = {
   endWithThumbnail: PropTypes.bool,
   disableSeek: PropTypes.bool,
   pauseOnPress: PropTypes.bool,
+  fullScreenOnLongPress: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -548,5 +553,6 @@ VideoPlayer.defaultProps = {
   resizeMode: 'contain',
   disableSeek: false,
   pauseOnPress: false,
+  fullScreenOnLongPress: false,
   customStyles: {},
 };
