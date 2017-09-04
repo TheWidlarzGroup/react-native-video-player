@@ -422,6 +422,7 @@ export default class VideoPlayer extends Component {
       video,
       style,
       resizeMode,
+      pauseOnPress,
       customStyles,
       ...props
     } = this.props;
@@ -450,7 +451,15 @@ export default class VideoPlayer extends Component {
             { marginTop: -this.getSizeStyles().height },
           ]}
         >
-          <TouchableOpacity style={styles.overlayButton} onPress={this.showControls} />
+          <TouchableOpacity 
+            style={styles.overlayButton} 
+            onPress={() => {
+              this.showControls();
+              if (pauseOnPress)
+                this.onPlayPress();
+              }
+            } 
+          />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
           ? this.renderControls() : this.renderSeekBar(true)}
@@ -501,6 +510,7 @@ VideoPlayer.propTypes = {
   hideControlsOnStart: PropTypes.bool,
   endWithThumbnail: PropTypes.bool,
   disableSeek: PropTypes.bool,
+  pauseOnPress: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -537,5 +547,6 @@ VideoPlayer.defaultProps = {
   loop: false,
   resizeMode: 'contain',
   disableSeek: false,
+  pauseOnPress: false,
   customStyles: {},
 };

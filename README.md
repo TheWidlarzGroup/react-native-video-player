@@ -34,6 +34,7 @@ react-native link react-native-vector-icons
 | hideControlsOnStart     | Hides the controls on start video.                                                          |
 | endWithThumbnail        | Returns to the thumbnail after the video ends.                                              |
 | disableSeek             | Disable video seeking.                                                                      |
+| pauseOnPress            | Automatically pause/play when pressing the video player anywhere                            |
 | onStart                 | Callback for when the start button is pressed.                                              |
 | onPlayPress             | Callback for when the play button is pressed.                                               |
 | onHideControls          | Callback for when the controls are being hide.                                              |
