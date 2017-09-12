@@ -1,3 +1,7 @@
+## 0.8.1
+ - Added `disableSeek`, `pauseOnPress`, `fullScreenOnLongPress` (thanks @mateofd).
+ - Bumped react-native-video version (thanks @ndcollins).
+
 ## 0.8.0
  - Updated to react native 0.46.4 and fixed PropTypes (thanks @Traviskn).
  - Added `onStart` property (thanks @gvillenave).
