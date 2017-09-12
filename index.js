@@ -336,7 +336,7 @@ export default class VideoPlayer extends Component {
   }
 
   renderSeekBar(fullWidth) {
-    const { customStyles } = this.props;
+    const { customStyles, disableSeek } = this.props;
     return (
       <View
         style={[
@@ -354,7 +354,7 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
-        { !fullWidth ? (
+        { !fullWidth && !disableSeek ? (
           <View
             style={[
               styles.seekBarKnob,
@@ -422,6 +422,8 @@ export default class VideoPlayer extends Component {
       video,
       style,
       resizeMode,
+      pauseOnPress,
+      fullScreenOnLongPress,
       customStyles,
       ...props
     } = this.props;
@@ -450,7 +452,18 @@ export default class VideoPlayer extends Component {
             { marginTop: -this.getSizeStyles().height },
           ]}
         >
-          <TouchableOpacity style={styles.overlayButton} onPress={this.showControls} />
+          <TouchableOpacity 
+            style={styles.overlayButton} 
+            onPress={() => {
+              this.showControls();
+              if (pauseOnPress)
+                this.onPlayPress();
+            }}
+            onLongPress={() => {
+              if (fullScreenOnLongPress && Platform.OS !== 'android')
+                this.onToggleFullScreen();
+            }} 
+          />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
           ? this.renderControls() : this.renderSeekBar(true)}
@@ -500,6 +513,9 @@ VideoPlayer.propTypes = {
   resizeMode: Video.propTypes.resizeMode,
   hideControlsOnStart: PropTypes.bool,
   endWithThumbnail: PropTypes.bool,
+  disableSeek: PropTypes.bool,
+  pauseOnPress: PropTypes.bool,
+  fullScreenOnLongPress: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -535,5 +551,8 @@ VideoPlayer.defaultProps = {
   controlsTimeout: 2000,
   loop: false,
   resizeMode: 'contain',
+  disableSeek: false,
+  pauseOnPress: false,
+  fullScreenOnLongPress: false,
   customStyles: {},
 };

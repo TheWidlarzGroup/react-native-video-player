@@ -33,6 +33,9 @@ react-native link react-native-vector-icons
 | resizeMode              | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
 | hideControlsOnStart     | Hides the controls on start video.                                                          |
 | endWithThumbnail        | Returns to the thumbnail after the video ends.                                              |
+| disableSeek             | Disable video seeking.                                                                      |
+| pauseOnPress            | Automatically pause/play when pressing the video player anywhere.                           |
+| fullScreenOnLongPress   | Automatically show video on fullscreen when doing a long press.                             |
 | onStart                 | Callback for when the start button is pressed.                                              |
 | onPlayPress             | Callback for when the play button is pressed.                                               |
 | onHideControls          | Callback for when the controls are being hide.                                              |
