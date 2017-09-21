@@ -1,3 +1,6 @@
+## 0.8.2
+ - Fixed error in more Android versions
+
 ## 0.8.1
  - Added `disableSeek`, `pauseOnPress`, `fullScreenOnLongPress` (thanks @mateofd).
  - Bumped react-native-video version (thanks @ndcollins).
