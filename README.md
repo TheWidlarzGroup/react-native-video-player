@@ -71,3 +71,4 @@ All other props are passed to the react-native-video component.
 - [X] Add fullscreen button
   - [ ] Add fullscreen button for android
 - [ ] Add loader
+- [ ] Add video duration/play time
