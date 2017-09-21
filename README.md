@@ -69,6 +69,6 @@ All other props are passed to the react-native-video component.
 - [x] Make player customizable.
 - [ ] Add volume control
 - [X] Add fullscreen button
-  - [ ] Add fullscreen button for android
+  - [ ] Add fullscreen button for Android (See PR #38 if you need fullscreen in Android)
 - [ ] Add loader
 - [ ] Add video duration/play time
