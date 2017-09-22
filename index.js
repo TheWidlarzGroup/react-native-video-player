@@ -201,11 +201,29 @@ export default class VideoPlayer extends Component {
     if(Platform.OS === "android")
     {
       var uri = this.props.video.uri;
-      NativeModules.BridgeModule.showFullscreen(uri);
+      var position = Math.floor(this.state.duration * this.state.progress);
+      this.showFullscreenAndroid(uri, position);
     }
     else
     {
       this.player.presentFullscreenPlayer();
+    }
+  }
+
+  async showFullscreenAndroid(uri, position) {
+    try {
+      position = await NativeModules.BridgeModule.showFullscreen(uri, position);
+      // If position is zero, stop.
+      if (position == 0) {
+        this.setState({ isPlaying: false });
+      } else {
+        position = Math.floor(position / 1000);
+        let progress = position / this.state.duration;
+        this.setState({progress,});
+        this.player.seek(position);
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 
