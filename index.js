@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
+
+const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
 
 const styles = StyleSheet.create({
   preloadingPlaceholder: {
@@ -321,7 +323,7 @@ export default class VideoPlayer extends Component {
   renderThumbnail() {
     const { thumbnail, style, customStyles, ...props } = this.props;
     return (
-      <Image
+      <BackgroundImage
         {...props}
         style={[
           styles.thumbnail,
@@ -332,7 +334,7 @@ export default class VideoPlayer extends Component {
         source={thumbnail}
       >
         {this.renderStartButton()}
-      </Image>
+      </BackgroundImage>
     );
   }
 
