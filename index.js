@@ -82,6 +82,9 @@ const styles = StyleSheet.create({
 });
 
 export default class VideoPlayer extends Component {
+
+
+
   constructor(props) {
     super(props);
 
@@ -129,6 +132,14 @@ export default class VideoPlayer extends Component {
     }
   }
 
+  stop() {
+    //console.log('this in the video', this);
+    //this.player.seek(0);
+    this.setState({
+      isPlaying: false,
+    });
+  }
+
   onLayout(event) {
     const { width } = event.nativeEvent.layout;
     this.setState({
@@ -143,6 +154,9 @@ export default class VideoPlayer extends Component {
     });
 
     this.hideControls();
+    if(this.props.onStartPress){
+      this.props.onStartPress(this);
+    };
   }
 
   onProgress(event) {
@@ -184,10 +198,14 @@ export default class VideoPlayer extends Component {
   }
 
   onPlayPress() {
+    console.log('onPlayPress :: videoComponent')
     this.setState({
       isPlaying: !this.state.isPlaying,
     });
     this.showControls();
+    if(this.props.onPlayPress){
+      this.props.onPlayPress();
+    };
   }
 
   onMutePress() {
