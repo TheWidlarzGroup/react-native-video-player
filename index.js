@@ -308,6 +308,10 @@ export default class VideoPlayer extends Component {
     this.hideControls();
   }
 
+  seek(t) {
+    this.player.seek(t);
+  }
+
   renderStartButton() {
     const { customStyles } = this.props;
     return (

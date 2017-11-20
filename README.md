@@ -63,6 +63,12 @@ All other props are passed to the react-native-video component.
  - playArrow
  - videoWrapper
 
+## Methods
+
+| Method                  | Props           | Description                                                               |
+|-------------------------|-----------------|---------------------------------------------------------------------------|
+| seek                    | time: float     | Seek the player to the given time.                                        |
+
 ## Future features
 
 - [X] Make seek bar seekable.
