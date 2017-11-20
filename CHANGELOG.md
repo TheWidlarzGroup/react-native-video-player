@@ -1,3 +1,6 @@
+## 0.8.6
+ - Added `seek` method.
+
 ## 0.8.2
  - Fixed error in more Android versions
 
