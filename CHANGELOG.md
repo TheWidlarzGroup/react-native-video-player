@@ -1,3 +1,9 @@
+## 0.9.0
+ - Added `stop` method.
+ - Added `pause` method.
+ - Added `resume` method.
+ - Fixed seekbar not resetting after replaying video.
+
 ## 0.8.6
  - Added `seek` method.
 
