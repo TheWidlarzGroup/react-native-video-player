@@ -68,6 +68,9 @@ All other props are passed to the react-native-video component.
 | Method                  | Props           | Description                                                               |
 |-------------------------|-----------------|---------------------------------------------------------------------------|
 | seek                    | time: float     | Seek the player to the given time.                                        |
+| stop                    |                 | Stop the playback and reset back to 0:00.                                 |
+| pause                   |                 | Pause the playback.                                                       |
+| resume                  |                 | Resume the playback.                                                      |
 
 ## Future features
 

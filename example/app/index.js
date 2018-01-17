@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import VideoPlayer from 'react-native-video-player';
 
 const VIMEO_ID = '179859217';
@@ -37,6 +37,19 @@ export default class App extends Component {
           videoHeight={this.state.video.height}
           duration={this.state.video.duration/* I'm using a hls stream here, react-native-video
             can't figure out the length, so I pass it here from the vimeo config */}
+          ref={r => this.player = r}
+        />
+        <Button
+          onPress={() => this.player.stop()}
+          title="Stop"
+        />
+        <Button
+          onPress={() => this.player.pause()}
+          title="Pause"
+        />
+        <Button
+          onPress={() => this.player.resume()}
+          title="Resume"
         />
       </View>
     );

@@ -313,6 +313,29 @@ export default class VideoPlayer extends Component {
     this.player.seek(t);
   }
 
+  stop() {
+    this.setState({
+      isPlaying: false,
+      progress: 0,
+    });
+    this.seek(0);
+    this.showControls();
+  }
+
+  pause() {
+    this.setState({
+      isPlaying: false,
+    });
+    this.showControls();
+  }
+
+  resume() {
+    this.setState({
+      isPlaying: true,
+    });
+    this.showControls();
+  }
+
   renderStartButton() {
     const { customStyles } = this.props;
     return (
