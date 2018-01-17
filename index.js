@@ -145,10 +145,11 @@ export default class VideoPlayer extends Component {
       this.props.onStart();
     }
 
-    this.setState({
+    this.setState(state => ({
       isPlaying: true,
       isStarted: true,
-    });
+      progress: state.progress === 1 ? 0 : state.progress,
+    }));
 
     this.hideControls();
   }
@@ -459,8 +460,8 @@ export default class VideoPlayer extends Component {
             { marginTop: -this.getSizeStyles().height },
           ]}
         >
-          <TouchableOpacity 
-            style={styles.overlayButton} 
+          <TouchableOpacity
+            style={styles.overlayButton}
             onPress={() => {
               this.showControls();
               if (pauseOnPress)
@@ -469,7 +470,7 @@ export default class VideoPlayer extends Component {
             onLongPress={() => {
               if (fullScreenOnLongPress && Platform.OS !== 'android')
                 this.onToggleFullScreen();
-            }} 
+            }}
           />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
