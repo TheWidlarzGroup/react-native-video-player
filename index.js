@@ -205,9 +205,13 @@ export default class VideoPlayer extends Component {
   onToggleFullScreen() {
     if(Platform.OS === "android")
     {
-      var uri = this.props.video.uri;
+      var uri = this.props.video.uri + ".mp4";
       var position = Math.floor(this.state.duration * this.state.progress);
-      this.showFullscreenAndroid(uri, position);
+      var mainVer = 0;
+      var patchVer = 0;
+      if ( this.props.video.mainVer ) mainVer = this.props.video.mainVer;
+      if ( this.props.video.patchVer ) mainVer = this.props.video.patchVer;
+      this.showFullscreenAndroid(uri, position, mainVer, patchVer);
     }
     else
     {
@@ -215,9 +219,9 @@ export default class VideoPlayer extends Component {
     }
   }
 
-  async showFullscreenAndroid(uri, position) {
+  async showFullscreenAndroid(uri, position, mainVer, patchVer) {
     try {
-      position = await NativeModules.BridgeModule.showFullscreen(uri, position);
+      position = await NativeModules.BridgeModule.showFullscreen(uri, position, mainVer, patchVer);
       // If position is zero, stop.
       if (position == 0) {
         this.setState({ isPlaying: false });

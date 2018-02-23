@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-player",
-  "version": "0.8.3a",
+  "version": "0.8.3b",
   "description": "A video player for React Native with controls",
   "main": "index.js",
   "scripts": {

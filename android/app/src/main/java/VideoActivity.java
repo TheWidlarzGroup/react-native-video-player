@@ -36,6 +36,12 @@ public class VideoActivity extends AppCompatActivity {
             extras = i.getExtras();
             videoPath = extras.getString("VIDEO_URL");
             videoPosition = extras.getInt("VIDEO_POSITION");
+            mainVer = extras.getInt("MAIN_VER");
+            patchVer = extras.getInt("PATCH_VER");
+            Log.v("VIDEOACTIVITY",videoPath); 
+            Log.v("VIDEOACTIVITY",videoPosition);
+            Log.v("VIDEOACTIVITY",mainVer);
+            Log.v("VIDEOACTIVITY",patchVer);
             myVideoView = (VideoView) findViewById(R.id.videoView);
             progressDialog = ProgressDialog.show(VideoActivity.this, "", "Buffering video...", true);
             progressDialog.setCancelable(true);

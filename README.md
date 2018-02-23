@@ -101,4 +101,13 @@ Make a folder in your ```android\app\src\main\res``` directory and name it ```la
            
 If you want to remove the action bar, change your theme or change the theme for your activity from the manifest     
 
+If you want to load from an obb file, add the following to your AndroidManifext.xml file.  Update the mainVersion and patchVersion to suit and remember to change for any updates:
+
+<provider android:name="com.my.package.ZipFileContentProvider" android:authorities="com.my.package.provider">
+    <meta-data android:name="mainVersion" android:value="73"></meta-data> 
+    <meta-data android:name="patchVersion" android:value="0"></meta-data>
+</provider>
+
+Then pass the mainVer and expVer in as usual for react-native-video.
+
 And then your fullscreen should be working and ready to go!
