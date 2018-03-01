@@ -1,3 +1,6 @@
+## 0.9.1
+ - Fixed video repeating when loop turned off (thanks @mattvot)
+
 ## 0.9.0
  - Added `stop` method.
  - Added `pause` method.
