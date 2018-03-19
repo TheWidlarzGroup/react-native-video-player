@@ -88,6 +88,25 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'rgba(255, 255, 255, 0.6)',
   },
+
+  volReflect: {
+    backgroundColor: 'rgba(255, 0, 0, 0.5)',  
+    width: 100,
+    height: 30,
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  volProgress: {
+    height: 3,
+    backgroundColor: '#FFF',
+    alignSelf:'flex-end',    
+  },
+  volLeft: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    height: 3,   
+    alignSelf:'flex-end',
+  },
 });
 
 export default class VideoPlayer extends Component {
@@ -104,6 +123,7 @@ export default class VideoPlayer extends Component {
       duration: 0,
       isSeeking: false,
       volume: 0,
+      volBarNeedShow: false,
     };
 
     this.volControlBarWith = 200;
@@ -281,28 +301,32 @@ export default class VideoPlayer extends Component {
 
   onVolCtrlGrant(e) {
     console.log("Test vol ctrl grant start, pos=", e.nativeEvent.pageY);
+    const volBarNeedShow = true;
     this.volControlTouchStart = e.nativeEvent.pageY;
     this.showControls();
+    this.setState({volBarNeedShow});
   }
 
   onVolCtrlRelease() {
     console.log("Test vol ctrl touch release");
+    const volBarNeedShow = false;
+    this.setState({volBarNeedShow});
   }
 
   onVolControl(e) {
-    console.log("Test onVolControl,pos=", e.nativeEvent.pageY);
     let volume = this.state.volume;
+    const senseFactor = 5/4;
     const diff = this.volControlTouchStart - e.nativeEvent.pageY;
-    const volChange = diff / (this.getSizeStyles().height * 3);
-    if(volume <= 1 && volume >= 0) {
-        volume = volume + volChange;      
-    }
+    const volChange = diff / (this.getSizeStyles().height) * senseFactor;
+    volume = volume + volChange;   
     if(volume > 1) {
       volume = 1;
     }
     if(volume < 0) {
       volume = 0;
     }
+    console.log("Test onVolControl,pos=", e.nativeEvent.pageY,"new vol=", volume, "vol control touch start=", this.volControlTouchStart); 
+    this.volControlTouchStart = e.nativeEvent.pageY;
     let mutedChg = ((volume == 0 && this.state.volume > 0 && !this.state.isMuted) || (volume > 0 && this.state.volume == 0) 
                     || (this.state.isMuted && volChange > 0));
     const isMuted = (mutedChg ? (!this.state.isMuted) : (this.state.isMuted));
@@ -523,6 +547,57 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  renderVolReflect() {
+    return (
+      <View
+        style={{
+          backgroundColor: 'rgba(255, 0, 0, 0)',  
+          width:this.getSizeStyles().width/3,
+          height:60,
+          alignSelf: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          marginBottom: this.getSizeStyles().height*11/25,
+        }}
+      >
+        <Icon
+          style={{
+            color: 'white',
+            alignSelf: 'center',
+            marginBottom: 10,
+          }}
+          name={this.state.isMuted ? 'volume-off' : 'volume-up'}
+          size={30}
+        />    
+        <View 
+          style={{
+            backgroundColor: '#F00',
+            flexDirection: 'row',
+          }}
+        > 
+          <View 
+            style={[
+            {    
+              height: 3,
+              backgroundColor: '#FFF',
+            },            
+            {flexGrow: this.state.volume},
+            ]}
+          />
+          <View
+            style={[
+              {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                height: 3,   
+              },
+              {flexGrow: 1 - this.state.volume},
+            ]}
+          />
+        </View>
+      </View>
+    );
+  }
+
   renderControls() {
     const { customStyles } = this.props;
     return (
@@ -612,8 +687,10 @@ export default class VideoPlayer extends Component {
               if (fullScreenOnLongPress && Platform.OS !== 'android')
                 this.onToggleFullScreen();
             }}
-          />
-        </View>
+          /> 
+          {this.state.volBarNeedShow
+            ? this.renderVolReflect() : null}                                
+        </View>     
         {((!this.state.isPlaying) || this.state.isControlsVisible)
           ? this.renderControls() : this.renderSeekBar(true)}
         {this.renderVolControlBar()}
@@ -703,6 +780,6 @@ VideoPlayer.defaultProps = {
   resizeMode: 'contain',
   disableSeek: false,
   pauseOnPress: false,
-  fullScreenOnLongPress: false,
+  fullScreenOnLongPress: true,
   customStyles: {},
 };
