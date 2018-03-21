@@ -149,6 +149,7 @@ export default class VideoPlayer extends Component {
     this.onVolCtrlGrant = this.onVolCtrlGrant.bind(this);
     this.onVolCtrlRelease = this.onVolCtrlRelease.bind(this);
     this.onVolControl = this.onVolControl.bind(this);
+    this.onBack = this.props.onBack;
   }
 
   componentDidMount() {
@@ -714,10 +715,37 @@ export default class VideoPlayer extends Component {
     return this.renderVideo();
   }
 
+  renderHeader() {
+    const {height} = this.getSizeStyles();
+    const {videoTitle} = this.props;
+    return (
+      <View style={{marginTop: -height, marginBottom: height, flexDirection: 'row', justifyContent: 'center', }}>
+        <TouchableOpacity 
+          style={{flex: 1,paddingLeft: 10, justifyContent: 'center'}}
+          onPress={this.onBack}
+        >
+          <Icon name="arrow-back" size={25} color="white" />
+        </TouchableOpacity>
+        <View 
+          style={{flex: 5, alignItems: 'flex-start'}}
+        >
+          <Text 
+            style={{color: 'white', backgroundColor: 'transparent', fontSize: 18}}
+            numberOfLines={1}//only show one line 
+            allowFontScaling={true}
+          >
+            {videoTitle}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   render() {
     return (
       <View onLayout={this.onLayout} style={this.props.customStyles.wrapper}>
         {this.renderContent()}
+        {(!this.state.isPlaying || this.state.isControlsVisible) ? this.renderHeader(): null}
       </View>
     );
   }
@@ -743,6 +771,7 @@ VideoPlayer.propTypes = {
   disableSeek: PropTypes.bool,
   pauseOnPress: PropTypes.bool,
   fullScreenOnLongPress: PropTypes.bool,
+  videoTitle: PropTypes.string,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -769,6 +798,7 @@ VideoPlayer.propTypes = {
   onPlayPress: PropTypes.func,
   onHideControls: PropTypes.func,
   onShowControls: PropTypes.func,
+  onBack: PropTypes.func,
 };
 
 VideoPlayer.defaultProps = {
