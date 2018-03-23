@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
 
@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     marginTop: -48,
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 1,
   },
   playControl: {
     color: 'white',
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginLeft: -10,
-    marginRight: -5,
+    marginRight: 0,
   },
   seekBarFullWidth: {
     marginLeft: 0,
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#F00',
     transform: [{ scale: 0.8 }],
-    zIndex: 1,
+    zIndex: 2,
   },
   seekBarBackground: {
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
@@ -82,6 +83,29 @@ const styles = StyleSheet.create({
   },
   overlayButton: {
     flex: 1,
+  },
+  timeSyle: {
+    fontSize: 15,
+    color: 'rgba(255, 255, 255, 0.6)',
+  },
+
+  volReflect: {
+    backgroundColor: 'rgba(255, 0, 0, 0.5)',  
+    width: 100,
+    height: 30,
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  volProgress: {
+    height: 3,
+    backgroundColor: '#FFF',
+    alignSelf:'flex-end',    
+  },
+  volLeft: {
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    height: 3,   
+    alignSelf:'flex-end',
   },
 });
 
@@ -94,12 +118,16 @@ export default class VideoPlayer extends Component {
       isPlaying: props.autoplay,
       width: 200,
       progress: 0,
-      isMuted: props.defaultMuted,
+      isMuted: true,
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
       isSeeking: false,
+      volume: 0,
+      volBarNeedShow: false,
     };
 
+    this.volControlBarWith = 200;
+    this.volControlTouchStart = 0;
     this.seekBarWidth = 200;
     this.wasPlayingBeforeSeek = props.autoplay;
     this.seekTouchStart = 0;
@@ -118,6 +146,10 @@ export default class VideoPlayer extends Component {
     this.onSeekGrant = this.onSeekGrant.bind(this);
     this.onSeekRelease = this.onSeekRelease.bind(this);
     this.onSeek = this.onSeek.bind(this);
+    this.onVolCtrlGrant = this.onVolCtrlGrant.bind(this);
+    this.onVolCtrlRelease = this.onVolCtrlRelease.bind(this);
+    this.onVolControl = this.onVolControl.bind(this);
+    this.onBack = this.props.onBack;
   }
 
   componentDidMount() {
@@ -134,7 +166,7 @@ export default class VideoPlayer extends Component {
   }
 
   onLayout(event) {
-    const { width } = event.nativeEvent.layout;
+    const { width, height } = event.nativeEvent.layout;
     this.setState({
       width,
     });
@@ -242,6 +274,14 @@ export default class VideoPlayer extends Component {
     return true;
   }
 
+  onVolCtrlStartResponder() {
+    return true;
+  }            
+
+  onMoveShouldSetPanResponder() {
+    return true;
+  }
+
   onSeekGrant(e) {
     this.seekTouchStart = e.nativeEvent.pageX;
     this.seekProgressStart = this.state.progress;
@@ -258,6 +298,44 @@ export default class VideoPlayer extends Component {
       isPlaying: this.wasPlayingBeforeSeek,
     });
     this.showControls();
+  }
+
+  onVolCtrlGrant(e) {
+    console.log("Test vol ctrl grant start, pos=", e.nativeEvent.pageY);
+    const volBarNeedShow = true;
+    this.volControlTouchStart = e.nativeEvent.pageY;
+    this.showControls();
+    this.setState({volBarNeedShow});
+  }
+
+  onVolCtrlRelease() {
+    console.log("Test vol ctrl touch release");
+    const volBarNeedShow = false;
+    this.setState({volBarNeedShow});
+  }
+
+  onVolControl(e) {
+    let volume = this.state.volume;
+    const senseFactor = 5/4;
+    const diff = this.volControlTouchStart - e.nativeEvent.pageY;
+    const volChange = diff / (this.getSizeStyles().height) * senseFactor;
+    volume = volume + volChange;   
+    if(volume > 1) {
+      volume = 1;
+    }
+    if(volume < 0) {
+      volume = 0;
+    }
+    console.log("Test onVolControl,pos=", e.nativeEvent.pageY,"new vol=", volume, "vol control touch start=", this.volControlTouchStart); 
+    this.volControlTouchStart = e.nativeEvent.pageY;
+    let mutedChg = ((volume == 0 && this.state.volume > 0 && !this.state.isMuted) || (volume > 0 && this.state.volume == 0) 
+                    || (this.state.isMuted && volChange > 0));
+    const isMuted = (mutedChg ? (!this.state.isMuted) : (this.state.isMuted));
+    console.log("Test mutedChg=", mutedChg, "new mute status=", isMuted);
+    this.setState({
+      volume,
+      isMuted,
+    });
   }
 
   onSeek(e) {
@@ -338,6 +416,43 @@ export default class VideoPlayer extends Component {
     this.showControls();
   }
 
+  formatTime(seconds) {
+    let hour = parseInt(seconds/3600);
+    let minute = parseInt(seconds/60);
+    let sec = parseInt(seconds%60);
+    console.log("Test input sec=", seconds, "hour=", hour, "minute=", minute, "sec=", sec);
+    let formatTime = 0;
+    if(hour > 99) {
+      console.log("Test input time out of bound, seconds=", seconds);
+      return formatTime;
+    }
+    if(seconds === 0) {
+      return '00:00';
+    }
+    if(hour < 10 && hour > 0) {
+      hour = '0' + hour.toString();
+    }
+    if(minute < 10) {
+      minute = '0' + minute.toString();
+    }
+    if(sec < 10) {
+      minute = '0' + sec.toString();
+    }
+    if(hour > 0) {
+      formatTime = hour + ':' + minute + ':' + sec;
+    }
+    else {
+      formatTime = minute + ':' + sec;
+    }
+    return formatTime;
+  }
+
+  getMuteStatus() {
+    this.state.isMuted = (this.state.volume === 0 ? true : false);
+    console.log("Test isMuted=", this.state.isMuted, "vol=", this.state.volume);
+    return this.props.muted || this.state.isMuted;
+  }
+
   renderStartButton() {
     const { customStyles } = this.props;
     return (
@@ -365,6 +480,26 @@ export default class VideoPlayer extends Component {
       >
         {this.renderStartButton()}
       </BackgroundImage>
+    );
+  }
+
+  renderVolControlBar() {
+    return (
+      <View style={{
+              backgroundColor: 'rgba(255, 0, 0, 0)',
+              alignSelf: 'flex-end',
+              height:this.getSizeStyles().height,
+              width:100, 
+              marginTop:-this.getSizeStyles().height,
+              }}  
+            hitSlop={{ top: 20, bottom: 20, left: 10, right: 20 }}
+            onStartShouldSetResponder={this.onVolCtrlStartResponder}
+            onMoveShouldSetPanResponder={this.onVolCtrlMoveResponder}
+            onResponderGrant={this.onVolCtrlGrant}
+            onResponderMove={this.onVolControl}
+            onResponderRelease={this.onVolCtrlRelease}
+            onResponderTerminate={this.onVolCtrlRelease}            
+      />     
     );
   }
 
@@ -413,6 +548,57 @@ export default class VideoPlayer extends Component {
     );
   }
 
+  renderVolReflect() {
+    return (
+      <View
+        style={{
+          backgroundColor: 'rgba(255, 0, 0, 0)',  
+          width:this.getSizeStyles().width/3,
+          height:60,
+          alignSelf: 'center',
+          justifyContent: 'center',
+          flexDirection: 'column',
+          marginBottom: this.getSizeStyles().height*11/25,
+        }}
+      >
+        <Icon
+          style={{
+            color: 'white',
+            alignSelf: 'center',
+            marginBottom: 10,
+          }}
+          name={this.state.isMuted ? 'volume-off' : 'volume-up'}
+          size={30}
+        />    
+        <View 
+          style={{
+            backgroundColor: '#F00',
+            flexDirection: 'row',
+          }}
+        > 
+          <View 
+            style={[
+            {    
+              height: 3,
+              backgroundColor: '#FFF',
+            },            
+            {flexGrow: this.state.volume},
+            ]}
+          />
+          <View
+            style={[
+              {
+                backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                height: 3,   
+              },
+              {flexGrow: 1 - this.state.volume},
+            ]}
+          />
+        </View>
+      </View>
+    );
+  }
+
   renderControls() {
     const { customStyles } = this.props;
     return (
@@ -428,6 +614,11 @@ export default class VideoPlayer extends Component {
           />
         </TouchableOpacity>
         {this.renderSeekBar()}
+        {
+          <Text style={styles.timeSyle}>
+            {this.formatTime(this.state.duration)}
+          </Text>
+        }
         {this.props.muted ? null : (
           <TouchableOpacity onPress={this.onMutePress} style={customStyles.controlButton}>
             <Icon
@@ -471,6 +662,7 @@ export default class VideoPlayer extends Component {
             customStyles.video,
           ]}
           ref={p => { this.player = p; }}
+          volume={this.state.volume}          
           muted={this.props.muted || this.state.isMuted}
           paused={!this.state.isPlaying}
           onProgress={this.onProgress}
@@ -496,10 +688,13 @@ export default class VideoPlayer extends Component {
               if (fullScreenOnLongPress && Platform.OS !== 'android')
                 this.onToggleFullScreen();
             }}
-          />
-        </View>
+          /> 
+          {this.state.volBarNeedShow
+            ? this.renderVolReflect() : null}                                
+        </View>     
         {((!this.state.isPlaying) || this.state.isControlsVisible)
           ? this.renderControls() : this.renderSeekBar(true)}
+        {this.renderVolControlBar()}
       </View>
     );
   }
@@ -520,10 +715,37 @@ export default class VideoPlayer extends Component {
     return this.renderVideo();
   }
 
+  renderHeader() {
+    const {height} = this.getSizeStyles();
+    const {videoTitle} = this.props;
+    return (
+      <View style={{marginTop: -height, marginBottom: height, flexDirection: 'row', justifyContent: 'center', }}>
+        <TouchableOpacity 
+          style={{flex: 1,paddingLeft: 10, justifyContent: 'center'}}
+          onPress={this.onBack}
+        >
+          <Icon name="arrow-back" size={25} color="white" />
+        </TouchableOpacity>
+        <View 
+          style={{flex: 5, alignItems: 'flex-start'}}
+        >
+          <Text 
+            style={{color: 'white', backgroundColor: 'transparent', fontSize: 18}}
+            numberOfLines={1}//only show one line 
+            allowFontScaling={true}
+          >
+            {videoTitle}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   render() {
     return (
       <View onLayout={this.onLayout} style={this.props.customStyles.wrapper}>
         {this.renderContent()}
+        {(!this.state.isPlaying || this.state.isControlsVisible) ? this.renderHeader(): null}
       </View>
     );
   }
@@ -549,6 +771,7 @@ VideoPlayer.propTypes = {
   disableSeek: PropTypes.bool,
   pauseOnPress: PropTypes.bool,
   fullScreenOnLongPress: PropTypes.bool,
+  videoTitle: PropTypes.string,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypes.style,
     video: Video.propTypes.style,
@@ -575,6 +798,7 @@ VideoPlayer.propTypes = {
   onPlayPress: PropTypes.func,
   onHideControls: PropTypes.func,
   onShowControls: PropTypes.func,
+  onBack: PropTypes.func,
 };
 
 VideoPlayer.defaultProps = {
@@ -586,6 +810,6 @@ VideoPlayer.defaultProps = {
   resizeMode: 'contain',
   disableSeek: false,
   pauseOnPress: false,
-  fullScreenOnLongPress: false,
+  fullScreenOnLongPress: true,
   customStyles: {},
 };
