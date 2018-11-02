@@ -181,7 +181,7 @@ export default class VideoPlayer extends Component {
     if (!this.props.loop) {
       this.setState(
         { isPlaying: false },
-        () => this.player.seek(0)
+        () => this.player && this.player.seek(0)
       );
     } else {
       this.player.seek(0);
