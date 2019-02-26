@@ -24,6 +24,8 @@ public class VideoActivity extends AppCompatActivity {
     private Bundle extras;
     private static final int MAX_DURATION = 500;
     private static ProgressDialog progressDialog;
+    private static MediaController mediaController;
+
     VideoView myVideoView;
 
     @Override
@@ -36,12 +38,6 @@ public class VideoActivity extends AppCompatActivity {
             extras = i.getExtras();
             videoPath = extras.getString("VIDEO_URL");
             videoPosition = extras.getInt("VIDEO_POSITION");
-            mainVer = extras.getInt("MAIN_VER");
-            patchVer = extras.getInt("PATCH_VER");
-            Log.v("VIDEOACTIVITY",videoPath); 
-            Log.v("VIDEOACTIVITY",videoPosition);
-            Log.v("VIDEOACTIVITY",mainVer);
-            Log.v("VIDEOACTIVITY",patchVer);
             myVideoView = (VideoView) findViewById(R.id.videoView);
             progressDialog = ProgressDialog.show(VideoActivity.this, "", "Buffering video...", true);
             progressDialog.setCancelable(true);
@@ -51,7 +47,8 @@ public class VideoActivity extends AppCompatActivity {
             Toast.makeText(VideoActivity.this, "VideoURL not found", Toast.LENGTH_SHORT).show();
         }
 
-        // Touch listener to close fullscreen video on doubleclick
+
+        // Touch listener to: show MediaControllers on singleclick &  close fullscreen video on doubleclick
         myVideoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -59,6 +56,7 @@ public class VideoActivity extends AppCompatActivity {
                 {
                 case MotionEvent.ACTION_UP:
                     clickCount++;
+                    mediaController.show();
                     if(clickCount >= 2) {
                         duration = System.currentTimeMillis() - startTime;
                         if(duration<= MAX_DURATION) {
@@ -77,7 +75,7 @@ public class VideoActivity extends AppCompatActivity {
     private void PlayVideo() {
         try {
             getWindow().setFormat(PixelFormat.TRANSLUCENT);
-            MediaController mediaController = new MediaController(VideoActivity.this);
+            mediaController = new MediaController(VideoActivity.this);
             mediaController.setAnchorView(myVideoView);
 
             Uri video = Uri.parse(videoPath);
@@ -126,5 +124,12 @@ public class VideoActivity extends AppCompatActivity {
     // Pass the progress back on the user pressing the back button.
     public void onBackPressed(){
         finishProgress();
+    }
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.closeBtn:
+                finishProgress();
+                break;
+        }
     }
 }

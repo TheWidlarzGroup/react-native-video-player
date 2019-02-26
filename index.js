@@ -207,11 +207,7 @@ export default class VideoPlayer extends Component {
     {
       var uri = this.props.video.uri + ".mp4";
       var position = Math.floor(this.state.duration * this.state.progress);
-      var mainVer = 0;
-      var patchVer = 0;
-      if ( this.props.video.mainVer ) mainVer = this.props.video.mainVer;
-      if ( this.props.video.patchVer ) mainVer = this.props.video.patchVer;
-      this.showFullscreenAndroid(uri, position, mainVer, patchVer);
+      this.showFullscreenAndroid(uri, position);
     }
     else
     {
@@ -219,9 +215,9 @@ export default class VideoPlayer extends Component {
     }
   }
 
-  async showFullscreenAndroid(uri, position, mainVer, patchVer) {
+  async showFullscreenAndroid(uri, position) {
     try {
-      position = await NativeModules.BridgeModule.showFullscreen(uri, position, mainVer, patchVer);
+      position = await NativeModules.BridgeModule.showFullscreen(uri, position);
       // If position is zero, stop.
       if (position == 0) {
         this.setState({ isPlaying: false });
@@ -465,8 +461,8 @@ export default class VideoPlayer extends Component {
             { marginTop: -this.getSizeStyles().height },
           ]}
         >
-          <TouchableOpacity 
-            style={styles.overlayButton} 
+          <TouchableOpacity
+            style={styles.overlayButton}
             onPress={() => {
               this.showControls();
               if (pauseOnPress)
@@ -475,7 +471,7 @@ export default class VideoPlayer extends Component {
             onLongPress={() => {
               if (fullScreenOnLongPress && Platform.OS !== 'android')
                 this.onToggleFullScreen();
-            }} 
+            }}
           />
         </View>
         {((!this.state.isPlaying) || this.state.isControlsVisible)
@@ -518,7 +514,7 @@ VideoPlayer.propTypes = {
   autoplay: PropTypes.bool,
   defaultMuted: PropTypes.bool,
   muted: PropTypes.bool,
-  style: ViewPropTypes.style,
+  style: PropTypes.style,
   controlsTimeout: PropTypes.number,
   disableControlsAutoHide: PropTypes.bool,
   loop: PropTypes.bool,
@@ -529,20 +525,20 @@ VideoPlayer.propTypes = {
   pauseOnPress: PropTypes.bool,
   fullScreenOnLongPress: PropTypes.bool,
   customStyles: PropTypes.shape({
-    wrapper: ViewPropTypes.style,
+    wrapper: PropTypes.style,
     video: Video.propTypes.style,
-    videoWrapper: ViewPropTypes.style,
-    controls: ViewPropTypes.style,
+    videoWrapper: PropTypes.style,
+    controls: PropTypes.style,
     playControl: TouchableOpacity.propTypes.style,
     controlButton: TouchableOpacity.propTypes.style,
     controlIcon: Icon.propTypes.style,
     playIcon: Icon.propTypes.style,
-    seekBar: ViewPropTypes.style,
-    seekBarFullWidth: ViewPropTypes.style,
-    seekBarProgress: ViewPropTypes.style,
-    seekBarKnob: ViewPropTypes.style,
-    seekBarKnobSeeking: ViewPropTypes.style,
-    seekBarBackground: ViewPropTypes.style,
+    seekBar: PropTypes.style,
+    seekBarFullWidth: PropTypes.style,
+    seekBarProgress: PropTypes.style,
+    seekBarKnob: PropTypes.style,
+    seekBarKnobSeeking: PropTypes.style,
+    seekBarBackground: PropTypes.style,
     thumbnail: Image.propTypes.style,
     playButton: TouchableOpacity.propTypes.style,
     playArrow: Icon.propTypes.style,

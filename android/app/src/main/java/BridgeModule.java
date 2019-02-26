@@ -13,8 +13,6 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Promise;
-import android.util.Log;
-
 
 public class BridgeModule extends ReactContextBaseJavaModule {
     static final int VIDEO_PROGRESS_REQUEST = 13214;  // The request code
@@ -54,21 +52,18 @@ public class BridgeModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void showFullscreen(String videoUri, int position, int mainVer, int patchVer, final Promise promise) {
+    public void showFullscreen(String videoUri, int position, final Promise promise) {
         Activity currentActivity = getCurrentActivity();
         Context context = getReactApplicationContext();
 
         // Store the promise to resolve/reject when video returns data
         mBridgePromise = promise;
-        Log.i("VIDEO","GO FULLSCREEN"); 
 
         try {
             Intent intent = new Intent(context, VideoActivity.class); // mContext got from your overriden constructor
             Bundle extras = new Bundle();
             extras.putString("VIDEO_URL",videoUri);
             extras.putInt("VIDEO_POSITION",position);
-            extras.putInt("MAIN_VER",mainVer);
-            extras.putInt("PATCH_VER",patchVer);
             intent.putExtras(extras);
             currentActivity.startActivityForResult(intent, VIDEO_PROGRESS_REQUEST);
         } catch (Exception e) {
