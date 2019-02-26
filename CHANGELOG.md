@@ -1,3 +1,15 @@
+## 0.9.1
+ - Fixed video repeating when loop turned off (thanks @mattvot)
+
+## 0.9.0
+ - Added `stop` method.
+ - Added `pause` method.
+ - Added `resume` method.
+ - Fixed seekbar not resetting after replaying video.
+
+## 0.8.6
+ - Added `seek` method.
+
 ## 0.8.2
  - Fixed error in more Android versions
 
