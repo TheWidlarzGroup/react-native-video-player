@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-player",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "A video player for React Native with controls",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "react": "*",
     "react-native": "*",
     "react-native-vector-icons": ">= 2.1.0",
-    "react-native-video": "^2.0.0"
+    "react-native-video": "^4.4.0"
   },
   "devDependencies": {
     "eslint": "^3.4.0",
