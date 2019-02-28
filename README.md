@@ -20,6 +20,7 @@ react-native link react-native-vector-icons
 |-------------------------|---------------------------------------------------------------------------------------------|
 | video                   | The video source to pass to react-native-video.                                             |
 | thumbnail               | An Image source to use as thumbnail before the video gets loaded.                           |
+| endThumbnail            | An Image source to use as thumbnail after the video has ended.                           |
 | videoWidth              | Width of the video to calculate the player size.                                            |
 | videoHeight             | Height of the video to calculate the player size.                                           |
 | duration                | Duration can not always be figured out (e.g. when using hls), this can be used as fallback. |
@@ -32,7 +33,7 @@ react-native link react-native-vector-icons
 | loop                    | Loop the video after playback is done.                                                      |
 | resizeMode              | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
 | hideControlsOnStart     | Hides the controls on start video.                                                          |
-| endWithThumbnail        | Returns to the thumbnail after the video ends.                                              |
+| endWithThumbnail        | Returns to the thumbnail after the video ends. If an `endThumbnail` image is not specified then the image specified in `thumbnail` is shown.                                              |
 | disableSeek             | Disable video seeking.                                                                      |
 | pauseOnPress            | Automatically pause/play when pressing the video player anywhere.                           |
 | fullScreenOnLongPress   | Automatically show video on fullscreen when doing a long press.                             |
