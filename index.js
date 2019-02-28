@@ -506,9 +506,7 @@ export default class VideoPlayer extends Component {
           ]}
           ref={p => { this.player = p; }}
           muted={this.props.muted || this.state.isMuted}
-          paused={this.props.paused
-            ? this.props.paused || !this.state.isPlaying
-            : !this.state.isPlaying}
+          paused={!this.state.isPlaying}
           onProgress={this.onProgress}
           onEnd={this.onEnd}
           onLoad={this.onLoad}
