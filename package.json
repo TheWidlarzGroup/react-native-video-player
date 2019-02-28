@@ -14,6 +14,13 @@
     "android"
   ],
   "author": "Corné Dorrestijn <contact@corne.info>",
+  "contributors": [
+    {
+      "name": "Samuel Suther",
+      "email": "info@suther.de",
+      "url": "https://www.suther.de"
+    }
+  ],
   "license": "ISC",
   "repository": "cornedor/react-native-video-player",
   "peerDependencies": {
