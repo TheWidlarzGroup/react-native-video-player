@@ -22,7 +22,7 @@
     }
   ],
   "license": "ISC",
-  "repository": "cornedor/react-native-video-player",
+  "repository": "xstable/react-native-video-player",
   "peerDependencies": {
     "prop-types": "*",
     "react": "*",
