@@ -56,7 +56,6 @@ public class VideoActivity extends AppCompatActivity {
                 {
                 case MotionEvent.ACTION_UP:
                     clickCount++;
-                    mediaController.show();
                     if(clickCount >= 2) {
                         duration = System.currentTimeMillis() - startTime;
                         if(duration<= MAX_DURATION) {
@@ -84,6 +83,18 @@ public class VideoActivity extends AppCompatActivity {
             myVideoView.requestFocus();
             myVideoView.setKeepScreenOn(true);
             myVideoView.seekTo(videoPosition * 1000);
+            mediaController.setPrevNextListeners(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // next button clicked
+                    mediaController.show();
+                }
+            }, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
             myVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
                     progressDialog.dismiss();
