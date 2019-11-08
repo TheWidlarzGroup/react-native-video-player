@@ -352,6 +352,18 @@ export default class VideoPlayer extends Component {
     });
     this.showControls();
   }
+  
+  onFullscreenPlayerDidPresent = () => {
+    if (this.props.onFullscreenPlayerDidPresent) {
+      thiss.props.onFullscreenPlayerDidPresent()
+    }
+  }
+
+  onFullscreenPlayerWillDismiss = () => {
+    if (this.props.onFullscreenPlayerWillDismiss) {
+      thiss.props.onFullscreenPlayerWillDismiss()
+    }
+  }
 
   renderStartButton() {
     const { customStyles } = this.props;
@@ -478,6 +490,8 @@ export default class VideoPlayer extends Component {
     return (
       <View style={customStyles.videoWrapper}>
         <Video
+          onFullscreenPlayerDidPresent={this.onFullscreenPlayerDidPresent}
+          onFullscreenPlayerWillDismiss={this.onFullscreenPlayerWillDismiss}
           {...props}
           style={[
             styles.video,
