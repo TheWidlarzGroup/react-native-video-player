@@ -6,12 +6,12 @@ import Video from 'react-native-video'; // eslint-disable-line
 
 const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
 
-let ViewPropTypesVar
+let ViewPropTypesVar;
 
 if (ViewPropTypes) {
-  ViewPropTypesVar = ViewPropTypes
+  ViewPropTypesVar = ViewPropTypes;
 } else {
-  ViewPropTypesVar = View.propTypes
+  ViewPropTypesVar = View.propTypes;
 }
 
 const styles = StyleSheet.create({
@@ -576,8 +576,8 @@ VideoPlayer.propTypes = {
     video: Video.propTypes.style,
     videoWrapper: ViewPropTypesVar.style,
     controls: ViewPropTypesVar.style,
-    playControl: TouchableOpacity.propTypes.style,
-    controlButton: TouchableOpacity.propTypes.style,
+    playControl: ViewPropTypesVar.style,
+    controlButton: ViewPropTypesVar.style,
     controlIcon: Icon.propTypes.style,
     playIcon: Icon.propTypes.style,
     seekBar: ViewPropTypesVar.style,
@@ -587,7 +587,7 @@ VideoPlayer.propTypes = {
     seekBarKnobSeeking: ViewPropTypesVar.style,
     seekBarBackground: ViewPropTypesVar.style,
     thumbnail: Image.propTypes.style,
-    playButton: TouchableOpacity.propTypes.style,
+    playButton: ViewPropTypesVar.style,
     playArrow: Icon.propTypes.style,
   }),
   onEnd: PropTypes.func,

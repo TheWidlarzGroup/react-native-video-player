@@ -1,4 +1,7 @@
-# React Native Video Player
+# React Native Video Player [![npm][npm-image]][npm-url]
+
+[npm-image]: https://img.shields.io/npm/v/react-native-video-player.svg
+[npm-url]: https://www.npmjs.com/package/react-native-video-player
 
 A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
@@ -9,7 +12,22 @@ react-native-video for the video playback.
 ## Installation
 
 ```
+yarn add react-native-video-player react-native-video react-native-vector-icons
+```
+
+or
+```
 npm install --save react-native-video-player react-native-video react-native-vector-icons
+```
+
+Then, for React Native >= 0.60:
+```
+cd ios
+pod install
+```
+
+For React Native < 0.60
+```
 react-native link react-native-video
 react-native link react-native-vector-icons
 ```

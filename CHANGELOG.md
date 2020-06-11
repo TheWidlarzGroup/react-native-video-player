@@ -1,3 +1,6 @@
+## 0.10.1
+ - Fixed prop types issue on TouchableOpacity causing this package not to work on React Native v0.62.
+
 ## 0.9.1
  - Fixed video repeating when loop turned off (thanks @mattvot)
 
