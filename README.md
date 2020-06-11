@@ -26,6 +26,15 @@ cd ios
 pod install
 ```
 
+Add the following in your `Info.plist` file on iOS (required for `react-native-vector-icons` to work):
+
+```
+<key>UIAppFonts</key>
+<array>
+	<string>MaterialIcons.ttf</string>
+</array>
+```
+
 For React Native < 0.60
 ```
 react-native link react-native-video
