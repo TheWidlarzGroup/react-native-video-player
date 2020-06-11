@@ -26,7 +26,7 @@ cd ios
 pod install
 ```
 
-Add the following at the beginning of `./android/app/build.gradle` on Android:
+Add the following at the beginning of `./android/app/build.gradle` on Android (required for `react-native-vector-icons` to work):
 ```gradle
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 ```
@@ -44,6 +44,17 @@ For React Native < 0.60
 ```
 react-native link react-native-video
 react-native link react-native-vector-icons
+```
+
+## Example
+
+```jsx
+<VideoPlayer
+    video={{ uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }}
+    videoWidth={1600}
+    videoHeight={900}
+    thumbnail={{ uri: 'https://i.picsum.photos/id/866/1600/900.jpg' }}
+/>
 ```
 
 ## Props
