@@ -1,4 +1,4 @@
-Nodeunit contributors (sorted alphabetically)
+react-native-video-player contributors (sorted alphabetically)
 ============================================
 
 * **[Corné Dorrestijn](https://github.com/cornedor)**
