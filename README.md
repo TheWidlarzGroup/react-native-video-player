@@ -26,9 +26,14 @@ cd ios
 pod install
 ```
 
+Add the following at the beginning of `./android/app/build.gradle` on Android:
+```gradle
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+```
+
 Add the following in your `Info.plist` file on iOS (required for `react-native-vector-icons` to work):
 
-```
+```xml
 <key>UIAppFonts</key>
 <array>
 	<string>MaterialIcons.ttf</string>
