@@ -258,6 +258,7 @@ export default class VideoPlayer extends Component {
   }
 
   onSeekGrant(e) {
+    this.props.onSeekGrant && this.props.onSeekGrant()
     this.seekTouchStart = e.nativeEvent.pageX;
     this.seekProgressStart = this.state.progress;
     this.wasPlayingBeforeSeek = this.state.isPlaying;
@@ -268,6 +269,7 @@ export default class VideoPlayer extends Component {
   }
 
   onSeekRelease() {
+    this.props.onSeekRelease && this.props.onSeekRelease()
     this.setState({
       isSeeking: false,
       isPlaying: this.wasPlayingBeforeSeek,
@@ -344,6 +346,14 @@ export default class VideoPlayer extends Component {
       isPlaying: false,
     });
     this.showControls();
+  }
+
+  presentFullscreenPlayer() {
+    this.player && this.player.presentFullscreenPlayer();
+  }
+
+  dismissFullscreenPlayer() {
+    this.player && this.player.dismissFullscreenPlayer();
   }
 
   resume() {
