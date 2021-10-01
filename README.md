@@ -45,6 +45,22 @@ For React Native < 0.60
 react-native link react-native-video
 react-native link react-native-vector-icons
 ```
+## Important Note
+To avoid **Build Error** "Could not find com.yqritc:android-scalablevideoview:1.0.4."
+Add jcenter() to your build.gradle file present at the android folder (add it under **allprojects**).
+after the adding the changes, code would look like
+
+For more info please refer to [LINK](https://stackoverflow.com/questions/68835157/error-when-trying-to-run-my-react-native-app-on-android)
+```
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+  }
+}
+
+```
 
 ## Example
 
