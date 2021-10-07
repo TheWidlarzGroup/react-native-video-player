@@ -480,7 +480,7 @@ export default class VideoPlayer extends Component {
         {this.renderSeekBar()}
         <TextInput style={[styles.durationText, styles.activeDurationText, customStyles.durationText]} editable={false} ref={e=> this.currentTime=e} value={getDurationTime(0)}/>
         <Text style={[styles.durationText, customStyles.durationText]}>/</Text>
-        <Text style={[styles.durationText, customStyles.durationText]}>{getDurationTime(this.state.duration*1000)}</Text>
+        <Text style={[styles.durationText, customStyles.durationText]}>{getDurationTime(this.state.duration)}</Text>
         {this.props.muted ? null : (
           <TouchableOpacity onPress={this.onMutePress} style={customStyles.controlButton}>
             <Icon
