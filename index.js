@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes} from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
 
@@ -13,6 +13,24 @@ if (ViewPropTypes) {
 } else {
   ViewPropTypesVar = View.propTypes;
 }
+
+const getDurationTime = (duration) => {
+  const padTimeValueString = (value) => value.toString().padStart(2, '0');
+
+  if (!Number.isFinite(duration)) return '';
+  let seconds = Math.floor(duration % 60), minutes = Math.floor((duration / 60) % 60), hours = Math.floor((duration / (60 * 60)) % 24);
+
+  const isHrsZero = hours === 0;
+  hours = isHrsZero ? 0 : padTimeValueString(hours);
+  minutes = padTimeValueString(minutes);
+  seconds = padTimeValueString(seconds);
+
+  if (isHrsZero) {
+    return minutes + ':' + seconds;
+  }
+
+  return hours + ':' + minutes + ':' + seconds;
+};
 
 const styles = StyleSheet.create({
   preloadingPlaceholder: {
@@ -91,6 +109,15 @@ const styles = StyleSheet.create({
   overlayButton: {
     flex: 1,
   },
+  activeDurationText: {
+    paddingLeft: 8,
+    paddingRight:0,
+    paddingBottom: 0,
+    paddingTop: 0
+  },
+  durationText: {
+    color: 'white'
+  }
 });
 
 export default class VideoPlayer extends Component {
@@ -127,6 +154,7 @@ export default class VideoPlayer extends Component {
     this.onSeekGrant = this.onSeekGrant.bind(this);
     this.onSeekRelease = this.onSeekRelease.bind(this);
     this.onSeek = this.onSeek.bind(this);
+    this.onSeekEvent = this.onSeekEvent.bind(this);
   }
 
   componentDidMount() {
@@ -174,6 +202,7 @@ export default class VideoPlayer extends Component {
     this.setState({
       progress: event.currentTime / (this.props.duration || this.state.duration),
     });
+    this.currentTime?.setNativeProps({ text: getDurationTime(event.currentTime) })
   }
 
   onEnd(event) {
@@ -196,6 +225,8 @@ export default class VideoPlayer extends Component {
     } else {
       this.player.seek(0);
     }
+
+    this.currentTime?.setNativeProps({ text: getDurationTime(this.state.duration) })
   }
 
   onLoad(event) {
@@ -285,6 +316,10 @@ export default class VideoPlayer extends Component {
     });
 
     this.player.seek(progress * this.state.duration);
+  }
+
+  onSeekEvent(e) {
+    this.currentTime?.setNativeProps({ text: getDurationTime(e.currentTime) })
   }
 
   getSizeStyles() {
@@ -429,7 +464,7 @@ export default class VideoPlayer extends Component {
   }
 
   renderControls() {
-    const { customStyles } = this.props;
+    const { customStyles, showDuration } = this.props;
     return (
       <View style={[styles.controls, customStyles.controls]}>
         <TouchableOpacity
@@ -443,6 +478,13 @@ export default class VideoPlayer extends Component {
           />
         </TouchableOpacity>
         {this.renderSeekBar()}
+        {showDuration && (
+          <>
+            <TextInput style={[styles.durationText, styles.activeDurationText, customStyles.durationText]} editable={false} ref={e=> this.currentTime=e} value={getDurationTime(0)}/>
+            <Text style={[styles.durationText, customStyles.durationText]}>/</Text>
+            <Text style={[styles.durationText, customStyles.durationText]}>{getDurationTime(this.state.duration)}</Text>
+          </>
+        )}
         {this.props.muted ? null : (
           <TouchableOpacity onPress={this.onMutePress} style={customStyles.controlButton}>
             <Icon
@@ -495,6 +537,7 @@ export default class VideoPlayer extends Component {
           onLoad={this.onLoad}
           source={video}
           resizeMode={resizeMode}
+          onSeek={this.onSeekEvent}
         />
         <View
           style={[
@@ -589,6 +632,7 @@ VideoPlayer.propTypes = {
     thumbnail: Image.propTypes.style,
     playButton: ViewPropTypesVar.style,
     playArrow: Icon.propTypes.style,
+    durationText: ViewPropTypesVar.style
   }),
   onEnd: PropTypes.func,
   onProgress: PropTypes.func,
@@ -598,6 +642,7 @@ VideoPlayer.propTypes = {
   onHideControls: PropTypes.func,
   onShowControls: PropTypes.func,
   onMutePress: PropTypes.func,
+  showDuration: PropTypes.bool
 };
 
 VideoPlayer.defaultProps = {
@@ -611,4 +656,5 @@ VideoPlayer.defaultProps = {
   pauseOnPress: false,
   fullScreenOnLongPress: false,
   customStyles: {},
+  showDuration: false
 };
