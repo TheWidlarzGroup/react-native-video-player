@@ -63,10 +63,11 @@ react-native link react-native-vector-icons
 |-------------------------|---------------------------------------------------------------------------------------------|
 | video                   | The video source to pass to react-native-video.                                             |
 | thumbnail               | An Image source to use as thumbnail before the video gets loaded.                           |
-| endThumbnail            | An Image source to use as thumbnail after the video has ended.                           |
+| endThumbnail            | An Image source to use as thumbnail after the video has ended.                              |
 | videoWidth              | Width of the video to calculate the player size.                                            |
 | videoHeight             | Height of the video to calculate the player size.                                           |
 | duration                | Duration can not always be figured out (e.g. when using hls), this can be used as fallback. |
+| showDuration            | Show duration in seek bar.                                                                  |
 | autoplay                | Start the video automatically.                                                              |
 | defaultMuted            | Start the video muted, but allow toggling.                                                  |
 | muted                   | Start the video muted and hide the mute toggle button.                                      |
