@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Image, ImageBackground, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
 
@@ -117,6 +118,27 @@ const styles = StyleSheet.create({
   },
   durationText: {
     color: 'white'
+  },
+  skipWrapper: {
+    position:'absolute',
+    zIndex: 2
+  },
+  skipButtonWrapper: {
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+  skipButtonDisplay: {
+    width:100, 
+    height:100,
+    backgroundColor: '#0000007a',
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  skipButtonDisplayText: {
+    color: '#fff',
+    fontSize: 12
   }
 });
 
@@ -134,12 +156,17 @@ export default class VideoPlayer extends Component {
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
       isSeeking: false,
+      skipIconForward: false,
+      skipIconBackward: false,
+      enableSkip: props.enableSkip
     };
 
     this.seekBarWidth = 200;
     this.wasPlayingBeforeSeek = props.autoplay;
     this.seekTouchStart = 0;
     this.seekProgressStart = 0;
+    this.skipTapDelay = 300;
+    this.timeSkip = props.timeSkip?props.timeSkip:5;
 
     this.onLayout = this.onLayout.bind(this);
     this.onStartPress = this.onStartPress.bind(this);
@@ -332,6 +359,16 @@ export default class VideoPlayer extends Component {
     };
   }
 
+  getSizeTapWrapper() {
+    const { videoWidth, videoHeight } = this.props;
+    const { width } = this.state;
+    const ratio = videoHeight / videoWidth;
+    return {
+      height: (width * ratio)-45,
+      width,
+    };
+  }
+
   hideControls() {
     if (this.props.onHideControls) {
       this.props.onHideControls();
@@ -386,6 +423,50 @@ export default class VideoPlayer extends Component {
       isPlaying: true,
     });
     this.showControls();
+  }
+
+  setSkipTime(type) {
+    const w = this.seekBarWidth;
+    const t = this.state.duration;
+    const ws = (this.timeSkip*w)/t;
+    const diff = ws - this.seekTouchStart;
+    const ratio = 100 / this.seekBarWidth;
+    var progress = 0;
+    if(type==='forward'){
+      progress = this.state.progress + ((ratio * diff) / 100);
+    }else{
+      progress = this.state.progress - ((ratio * diff) / 100);
+    }
+
+    this.setState({
+      progress,
+    });
+
+    this.player.seek(progress * this.state.duration);
+  }
+
+  handleSkip(type) {
+    this.showControls();
+    const now = Date.now();
+    if (this.lastTap && (now - this.lastTap) < this.skipTapDelay) {
+      if(type==='forward'){
+        this.setState({skipIconForward: true, skipIconBackward: false}, ()=>{
+          this.setSkipTime('forward');
+          setTimeout(() => {
+            this.setState({skipIconForward: false});
+          }, 1000);
+        })
+      }else{
+        this.setState({skipIconBackward: true, skipIconForward: false}, ()=>{
+          this.setSkipTime('backward');
+          setTimeout(() => {
+            this.setState({skipIconBackward: false});
+          }, 1000);
+        })
+      }
+    } else {
+      this.lastTap = now;
+    }
   }
 
   renderStartButton() {
@@ -519,6 +600,45 @@ export default class VideoPlayer extends Component {
     } = this.props;
     return (
       <View style={customStyles.videoWrapper}>
+        {
+          this.state.enableSkip?(
+            <View style={styles.skipWrapper}>
+              <View 
+                style={[
+                  this.getSizeTapWrapper(), 
+                  {flexDirection:"row"}
+                ]}
+              >
+                <TouchableOpacity 
+                  style={styles.skipButtonWrapper}
+                  onPress={() => this.handleSkip('backward')}
+                >
+                {
+                  this.state.skipIconBackward?(
+                    <View style={styles.skipButtonDisplay}>
+                      <Entypo name={"controller-fast-backward"} color={'#fff'} size={27}/>
+                      <Text style={styles.skipButtonDisplayText}>{this.timeSkip} sec</Text>
+                    </View>
+                  ):null
+                } 
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.skipButtonWrapper}
+                  onPress={() => this.handleSkip('forward')}
+                >
+                  {
+                  this.state.skipIconForward?(
+                    <View style={styles.skipButtonDisplay}>
+                      <Entypo name={"controller-fast-forward"} color={'#fff'} size={27}/>
+                      <Text style={styles.skipButtonDisplayText}>{this.timeSkip} sec</Text>
+                    </View>
+                  ):null
+                }
+                </TouchableOpacity>
+              </View>
+            </View>
+          ):null
+        }
         <Video
           {...props}
           style={[
