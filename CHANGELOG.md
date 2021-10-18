@@ -1,3 +1,6 @@
+## 0.11.1
+ - Added optional duration display in seek bar.
+
 ## 0.10.1
  - Fixed prop types issue on TouchableOpacity causing this package not to work on React Native v0.62.
 
