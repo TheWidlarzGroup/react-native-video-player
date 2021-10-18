@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes} from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
 
@@ -342,6 +342,9 @@ export default class VideoPlayer extends Component {
   }
 
   pause() {
+    this.player && this.player.setNativeProps({
+      paused: true
+    })
     this.setState({
       isPlaying: false,
     });
@@ -412,7 +415,7 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
-        { !fullWidth && !disableSeek ? (
+        {!fullWidth && !disableSeek ? (
           <View
             style={[
               styles.seekBarKnob,
@@ -428,7 +431,7 @@ export default class VideoPlayer extends Component {
             onResponderRelease={this.onSeekRelease}
             onResponderTerminate={this.onSeekRelease}
           />
-        ) : null }
+        ) : null}
         <View style={[
           styles.seekBarBackground,
           { flexGrow: 1 - this.state.progress },
