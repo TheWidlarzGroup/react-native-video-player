@@ -342,6 +342,9 @@ export default class VideoPlayer extends Component {
   }
 
   pause() {
+    this.player && this.player.setNativeProps({
+      paused: true
+    })
     this.setState({
       isPlaying: false,
     });
