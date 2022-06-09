@@ -3,10 +3,10 @@
 [npm-image]: https://img.shields.io/npm/v/react-native-video-player.svg
 [npm-url]: https://www.npmjs.com/package/react-native-video-player
 
-**Looking for maintainers! This project is currently no longer maintained. Please respond to issue #157 to become the new maintainer.**
-
 A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
+
+**Looking for maintainers! This project is currently no longer maintained. Please respond to issue #157 to become the new maintainer.**
 
 
 ![demo gif](https://raw.githubusercontent.com/cornedor/react-native-video-player/master/demo.gif "Demo GIF")
