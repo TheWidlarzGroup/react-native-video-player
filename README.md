@@ -1,6 +1,6 @@
 # Why do you use this library?
 
-I'm find out what why people use this library over others. If you have the time, please leave a reaction at https://github.com/cornedor/react-native-video-player/discussions/166
+I'd like to learn more about why people use this library over others. If you have the time, please leave a reaction at https://github.com/cornedor/react-native-video-player/discussions/166
 
 # React Native Video Player [![npm][npm-image]][npm-url]
 
