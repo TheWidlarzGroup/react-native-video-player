@@ -136,7 +136,7 @@ export default class VideoPlayer extends Component {
       duration: 0,
       isSeeking: false,
     };
-
+    
     this.seekBarWidth = 200;
     this.wasPlayingBeforeSeek = props.autoplay;
     this.seekTouchStart = 0;
@@ -446,7 +446,7 @@ export default class VideoPlayer extends Component {
       >
         <View
           style={[
-            { flexGrow: this.state.progress },
+            this.state.progress && {flexGrow: this.state.progress },
             styles.seekBarProgress,
             customStyles.seekBarProgress,
           ]}
@@ -470,7 +470,7 @@ export default class VideoPlayer extends Component {
         ) : null }
         <View style={[
           styles.seekBarBackground,
-          { flexGrow: 1 - this.state.progress },
+          this.state.progress && { flexGrow: 1 - this.state.progress },
           customStyles.seekBarBackground,
         ]} />
       </View>
