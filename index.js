@@ -224,7 +224,7 @@ export default class VideoPlayer extends Component {
         () => this.player && this.player.seek(0)
       );
     } else {
-      this.player.seek(0);
+      this.player && this.player.seek(0);
     }
 
     this.currentTime?.setNativeProps({ text: getDurationTime(this.state.duration) })
@@ -318,7 +318,7 @@ export default class VideoPlayer extends Component {
       progress,
     });
 
-    this.player.seek(progress * this.state.duration);
+    this.player && this.player.seek(progress * this.state.duration);
   }
 
   onSeekEvent(e) {
@@ -365,7 +365,7 @@ export default class VideoPlayer extends Component {
   }
 
   seek(t) {
-    this.player.seek(t);
+    this.player && this.player.seek(t);
   }
 
   stop() {
