@@ -376,6 +376,21 @@ export default class VideoPlayer extends Component {
     this.seek(0);
     this.showControls();
   }
+  
+  start() {
+    if (this.props.onStart) {
+      this.props.onStart();
+    }
+
+    this.setState(state => ({
+      isPlaying: true,
+      isStarted: true,
+      hasEnded: false,
+      progress: state.progress === 1 ? 0 : state.progress,
+    }));
+
+    this.hideControls();
+  }
 
   pause() {
     this.player && this.player.setNativeProps({
