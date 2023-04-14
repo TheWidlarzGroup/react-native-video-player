@@ -106,7 +106,8 @@ allprojects {
 | onStart                 | Callback for when the start button is pressed.                                              |
 | onPlayPress             | Callback for when the play button is pressed.                                               |
 | onHideControls          | Callback for when the controls are being hide.                                              |
-| onShowControls          | Callback for when the controls are being shown.                                             |
+| onShowControls          | Callback for when the controls are being shown.           
+| onThumbnailError        | Callback for when the thumnail image fails to load                                  |
 | customStyles            | The player can be customized in this object, see customStyles for the options.              |
 
 All other props are passed to the react-native-video component.

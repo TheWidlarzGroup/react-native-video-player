@@ -415,7 +415,7 @@ export default class VideoPlayer extends Component {
   }
 
   renderThumbnail(thumbnail) {
-    const { style, customStyles, ...props } = this.props;
+    const { style, customStyles, onThumbnailError, ...props } = this.props;
     return (
       <BackgroundImage
         {...props}
@@ -426,6 +426,7 @@ export default class VideoPlayer extends Component {
           customStyles.thumbnail,
         ]}
         source={thumbnail}
+        onError={onThumbnailError}
       >
         {this.renderStartButton()}
       </BackgroundImage>
