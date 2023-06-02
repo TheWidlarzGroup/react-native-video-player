@@ -427,7 +427,7 @@ export default class VideoPlayer extends Component {
         ]}
         source={thumbnail}
       >
-        {this.props.customStartButton ? this.props.customStartButton() : this.renderStartButton()}
+        {this.props.customStartButton ? this.props.customStartButton(this.onStartPress) : this.renderStartButton()}
       </BackgroundImage>
     );
   }
