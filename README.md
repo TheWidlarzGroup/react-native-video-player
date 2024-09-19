@@ -141,6 +141,8 @@ All other props are passed to the react-native-video component.
 | stop                    |                 | Stop the playback and reset back to 0:00.                                 |
 | pause                   |                 | Pause the playback.                                                       |
 | resume                  |                 | Resume the playback.                                                      |
+| enableSkip              | boolean (default: false)  | Double tap for skip duration.                                     |
+| timeSkip                | seconds: install (default: 5 sec)  | Duration time for skip.                                     |
 
 ## Future features
 
