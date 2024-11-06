@@ -1,9 +1,8 @@
 
-# This library has just recently been moved to our organization and we're still working on the future strategy. Stay tuned! Until then use another video controls library! Reach out if you have any questions or need support.
 
-# Why do you use this library?
+# What do you need from the video UI controls library? 
 
-I'd like to learn more about why people use this library over others. If you have the time, please leave a reaction at https://github.com/cornedor/react-native-video-player/discussions/166
+As we approach the end of 2024, we've started working on the roadmap for this project. This means it's not dead—it was just waiting for the perfect moment! Please share your enthusiasm and feedback here: [https://github.com/cornedor/react-native-video-player/discussions/166](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186)
 
 # React Native Video Player [![npm][npm-image]][npm-url]
 
@@ -12,8 +11,6 @@ I'd like to learn more about why people use this library over others. If you hav
 
 A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
-
-**Looking for maintainers! This project is currently no longer maintained. Please respond to issue #157 to become the new maintainer.**
 
 
 ![demo gif](https://raw.githubusercontent.com/cornedor/react-native-video-player/master/demo.gif "Demo GIF")
