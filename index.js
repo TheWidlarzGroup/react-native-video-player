@@ -406,12 +406,12 @@ export default class VideoPlayer extends Component {
   renderStartButton() {
     const { customStyles } = this.props;
     return (
-      <TouchableOpacity
-        style={[styles.playButton, customStyles.playButton]}
-        onPress={this.onStartPress}
-      >
-        <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.playButton, customStyles.playButton]}
+          onPress={this.onStartPress}
+        >
+          <Icon style={[styles.playArrow, customStyles.playArrow]} name="play-arrow" size={42} />
+        </TouchableOpacity>   
     );
   }
 
@@ -428,7 +428,7 @@ export default class VideoPlayer extends Component {
         ]}
         source={thumbnail}
       >
-        {this.renderStartButton()}
+        {this.props.customStartButton ? this.props.customStartButton(this.onStartPress) : this.renderStartButton()}
       </BackgroundImage>
     );
   }
