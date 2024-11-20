@@ -1,136 +1,106 @@
 
 
-# What do you need from the video UI controls library? 
+# What do you need from the video UI controls library?
 
 As we approach the end of 2024, we've started working on the roadmap for this project. This means it's not dead—it was just waiting for the perfect moment! Please share your enthusiasm and feedback here: [https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186)
 
-# React Native Video Player [![npm][npm-image]][npm-url]
+# react-native-video
 
-[npm-image]: https://img.shields.io/npm/v/react-native-video-player.svg
-[npm-url]: https://www.npmjs.com/package/react-native-video-player
+🎬 `<VideoPlayer />` component for React Native with a few controls. This player uses
+[react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
 
-A React Native video player with a few controls. This player uses
-react-native-video for the video playback.
-
-
-![demo gif](https://raw.githubusercontent.com/cornedor/react-native-video-player/master/demo.gif "Demo GIF")
+![demo gif](https://github.com/TheWidlarzGroup/react-native-video-player/blob/master/demo.gif?raw=true "Demo GIF")
 
 ## Installation
 
 ```
-yarn add react-native-video-player react-native-video react-native-vector-icons
+yarn add react-native-video-player
 ```
 
 or
 ```
-npm install --save react-native-video-player react-native-video react-native-vector-icons
+npm install --save react-native-video-player
 ```
 
-Then, for React Native >= 0.60:
+Then, install pods
 ```
 cd ios
 pod install
 ```
 
-Add the following at the beginning of `./android/app/build.gradle` on Android (required for `react-native-vector-icons` to work):
-```gradle
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-```
-
-Add the following in your `Info.plist` file on iOS (required for `react-native-vector-icons` to work):
-
-```xml
-<key>UIAppFonts</key>
-<array>
-	<string>MaterialIcons.ttf</string>
-</array>
-```
-
-For React Native < 0.60
-```
-react-native link react-native-video
-react-native link react-native-vector-icons
-```
-## Important Note
-To avoid **Build Error** "Could not find com.yqritc:android-scalablevideoview:1.0.4."
-Add jcenter() to your build.gradle file present at the android folder (add it under **allprojects**).
-after the adding the changes, code would look like
-
-For more info please refer to [LINK](https://stackoverflow.com/questions/68835157/error-when-trying-to-run-my-react-native-app-on-android)
-```
-allprojects {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-        jcenter()
-  }
-}
-
-```
-
 ## Example
 
-```jsx
-<VideoPlayer
-    video={{ uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }}
-    videoWidth={1600}
-    videoHeight={900}
-    thumbnail={{ uri: 'https://i.picsum.photos/id/866/1600/900.jpg' }}
-/>
+```tsx
+  import VideoPlayer, { type VideoPlayerRef } from 'react-native-video-player';
+
+  const playerRef = useRef<VideoPlayerRef>(null);
+
+  <VideoPlayer
+    ref={playerRef}
+    endWithThumbnail
+    thumbnail={{
+      uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
+    }}
+    source={{
+      uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    }}
+    onError={(e) => console.log(e)}
+    showDuration={true}
+  />
 ```
 
-## Props
+## Documentation
 
-| Prop                    | Description                                                                                 |
-|-------------------------|---------------------------------------------------------------------------------------------|
-| video                   | The video source to pass to react-native-video.                                             |
-| thumbnail               | An Image source to use as thumbnail before the video gets loaded.                           |
-| endThumbnail            | An Image source to use as thumbnail after the video has ended.                              |
-| videoWidth              | Width of the video to calculate the player size.                                            |
-| videoHeight             | Height of the video to calculate the player size.                                           |
-| duration                | Duration can not always be figured out (e.g. when using hls), this can be used as fallback. |
-| showDuration            | Show duration in seek bar.                                                                  |
-| autoplay                | Start the video automatically.                                                              |
-| defaultMuted            | Start the video muted, but allow toggling.                                                  |
-| muted                   | Start the video muted and hide the mute toggle button.                                      |
-| controlsTimeout         | Timeout when to hide the controls.                                                          |
-| disableControlsAutoHide | Disable auto hiding the controls.                                                           |
-| disableFullscreen       | Disable the fullscreen button.                                                              |
-| loop                    | Loop the video after playback is done.                                                      |
-| resizeMode              | The video's resizeMode. defaults to contain and is passed to react-native-video.            |
-| hideControlsOnStart     | Hides the controls on start video.                                                          |
-| endWithThumbnail        | Returns to the thumbnail after the video ends. If an `endThumbnail` image is not specified then the image specified in `thumbnail` is shown.                                              |
-| disableSeek             | Disable video seeking.                                                                      |
-| pauseOnPress            | Automatically pause/play when pressing the video player anywhere.                           |
-| fullScreenOnLongPress   | Automatically show video on fullscreen when doing a long press.                             |
-| onStart                 | Callback for when the start button is pressed.                                              |
-| onPlayPress             | Callback for when the play button is pressed.                                               |
-| onHideControls          | Callback for when the controls are being hide.                                              |
-| onShowControls          | Callback for when the controls are being shown.                                             |
-| customStyles            | The player can be customized in this object, see customStyles for the options.              |
+| Prop                    | Description                                                                                                                                  |
+|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| source                  | The video source to pass to react-native-video.                                                                                              |
+| thumbnail               | An Image source to use as thumbnail before the video gets loaded.                                                                            |
+| endThumbnail            | An Image source to use as thumbnail after the video has ended.                                                                               |
+| videoWidth              | Width of the video to calculate the player size.                                                                                             |
+| videoHeight             | Height of the video to calculate the player size.                                                                                            |
+| duration                | Duration should always be set out of the box. if not, you can use this prop                                                                  |
+| showDuration            | Show duration in seek bar.                                                                                                                   |
+| autoplay                | Start the video automatically.                                                                                                               |
+| defaultMuted            | Start the video muted, but allow toggling.                                                                                                   |
+| muted                   | Start the video muted and hide the mute toggle button.                                                                                       |
+| controlsTimeout         | Timeout when to hide the controls.                                                                                                           |
+| disableControlsAutoHide | Disable auto hiding the controls.                                                                                                            |
+| disableFullscreen       | Disable the fullscreen button.                                                                                                               |
+| repeat                  | Loop the video after playback is done.                                                                                                       |
+| resizeMode              | The video's resizeMode. defaults to contain and is passed to react-native-video.                                                             |
+| hideControlsOnStart     | Hides the controls on start video.                                                                                                           |
+| endWithThumbnail        | Returns to the thumbnail after the video ends. If an `endThumbnail` image is not specified then the image specified in `thumbnail` is shown. |
+| disableSeek             | Disable video seeking.                                                                                                                       |
+| pauseOnPress            | Automatically pause/play when pressing the video player anywhere.                                                                            |
+| fullScreenOnLongPress   | Automatically show video on fullscreen when doing a long press.                                                                              |
+| onStart                 | Callback for when the start button is pressed.                                                                                               |
+| onPlayPress             | Callback for when the play button is pressed.                                                                                                |
+| onHideControls          | Callback for when the controls are being hide.                                                                                               |
+| onShowControls          | Callback for when the controls are being shown.                                                                                              |
+| customStyles            | The player can be customized in this object, see customStyles for the options.                                                               |
 
 All other props are passed to the react-native-video component.
 
 ### customStyles
 
- - wrapper
- - video
- - controls
- - playControl
- - controlButton
- - controlIcon
- - playIcon
- - seekBar
- - seekBarFullWidth
- - seekBarProgress
- - seekBarKnob
- - seekBarBackground
- - thumbnail
- - playButton
- - playArrow
- - videoWrapper
+- wrapper
+- video
+- controls
+- playControl
+- controlButton
+- controlIcon
+- playIcon
+- seekBar
+- seekBarFullWidth
+- seekBarProgress
+- seekBarKnob
+- seekBarBackground
+- thumbnail
+- playButton
+- playArrow
+- videoWrapper
 
-## Methods
+### Ref methods
 
 | Method                  | Props           | Description                                                               |
 |-------------------------|-----------------|---------------------------------------------------------------------------|
@@ -141,10 +111,12 @@ All other props are passed to the react-native-video component.
 
 ## Future features
 
-- [X] Make seek bar seekable.
-- [x] Make player customizable.
-- [ ] Add volume control
-- [X] Add fullscreen button
-  - [ ] Add fullscreen button for Android (See PR #38 if you need fullscreen in Android)
-- [ ] Add loader
-- [ ] Add video duration/play time
+Check out our [Roadmap](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186) for what's coming up next! We're always working on new features and improvements, so stay tuned!
+
+## Community support
+We have an discord server where you can ask questions and get help. [Join the discord server](https://discord.gg/WXuM4Tgb9X)
+
+## Enterprise Support
+<p>
+  📱 <i>react-native-video-player</i> is provided <i>as it is</i>. For enterprise support or other business inquiries, <a href="https://www.thewidlarzgroup.com/?utm_source=rnv&utm_medium=readme#Contact">please contact us 🤝</a>. We can help you with the integration, customization and maintenance. We are providing both free and commercial support for this project. let's build something awesome together! 🚀
+</p>
