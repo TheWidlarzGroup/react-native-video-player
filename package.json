@@ -186,6 +186,6 @@
   },
   "dependencies": {
     "react-native-svg": "^15.8.0",
-    "react-native-video": "6.7.0"
+    "react-native-video": "6.8.0"
   }
 }

@@ -12270,7 +12270,7 @@ __metadata:
     react-native: 0.74.5
     react-native-builder-bob: ^0.31.0
     react-native-svg: ^15.8.0
-    react-native-video: 6.7.0
+    react-native-video: 6.8.0
     react-native-web: ~0.19.10
   languageName: unknown
   linkType: soft
@@ -12296,7 +12296,7 @@ __metadata:
     react-native: 0.74.5
     react-native-builder-bob: ^0.31.0
     react-native-svg: ^15.8.0
-    react-native-video: 6.7.0
+    react-native-video: 6.8.0
     release-it: ^17.10.0
     typescript: ^5.2.2
   peerDependencies:
@@ -12305,13 +12305,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-video@npm:6.7.0":
-  version: 6.7.0
-  resolution: "react-native-video@npm:6.7.0"
+"react-native-video@npm:6.8.0":
+  version: 6.8.0
+  resolution: "react-native-video@npm:6.8.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: ad8b321ef5ac078fededcafa63d7a21fada7c13ecaf34cd795058868ef386791347ba3e5b6f320aa7ab6bf95bcb0b3958cfca540a0675c8c57fdeaf2e828b1cf
+  checksum: 8697f581801c4ea29548f11beda24d66f3a58887c7ed920fbf7e646704399f392940280719955d434feeb63dbe7eb0b654c7b2aa5f8e362e5698507b0e8f4df1
   languageName: node
   linkType: hard
 
