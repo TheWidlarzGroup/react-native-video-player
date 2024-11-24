@@ -132,11 +132,11 @@ export default class VideoPlayer extends Component {
       width: 200,
       progress: 0,
       isMuted: props.defaultMuted,
-      isControlsVisible: !props.hideControlsOnStart,
+      isControlsVisible: false,
       duration: 0,
       isSeeking: false,
     };
-    
+
     this.seekBarWidth = 200;
     this.wasPlayingBeforeSeek = props.autoplay;
     this.seekTouchStart = 0;
@@ -171,6 +171,16 @@ export default class VideoPlayer extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isControlsVisible !== prevState.isControlsVisible) {
+      if (this.state.isControlsVisible && this.props.onShowControls) {
+        this.props.onShowControls();
+      } else if (!this.state.isControlsVisible && this.props.onHideControls) {
+        this.props.onHideControls();
+      }
+    }
+  }
+
   onLayout(event) {
     const { width } = event.nativeEvent.layout;
     this.setState({
@@ -186,6 +196,7 @@ export default class VideoPlayer extends Component {
     this.setState(state => ({
       isPlaying: true,
       isStarted: true,
+      isControlsVisible: !this.props.hideControlsOnStart,
       hasEnded: false,
       progress: state.progress === 1 ? 0 : state.progress,
     }));
@@ -220,7 +231,7 @@ export default class VideoPlayer extends Component {
 
     if (!this.props.loop) {
       this.setState(
-        { isPlaying: false },
+        { isPlaying: false, isControlsVisible: true },
         () => this.player && this.player.seek(0)
       );
     } else {
@@ -336,10 +347,6 @@ export default class VideoPlayer extends Component {
   }
 
   hideControls() {
-    if (this.props.onHideControls) {
-      this.props.onHideControls();
-    }
-
     if (this.props.disableControlsAutoHide) {
       return;
     }
@@ -354,10 +361,6 @@ export default class VideoPlayer extends Component {
   }
 
   showControls() {
-    if (this.props.onShowControls) {
-      this.props.onShowControls();
-    }
-
     this.setState({
       isControlsVisible: true,
     });
