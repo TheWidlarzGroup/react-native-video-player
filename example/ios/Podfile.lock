@@ -970,7 +970,7 @@ PODS:
   - React-Mapbuffer (0.74.5):
     - glog
     - React-debug
-  - react-native-video (6.7.0):
+  - react-native-video (6.8.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -984,7 +984,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.7.0)
+    - react-native-video/Video (= 6.8.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -992,7 +992,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.7.0):
+  - react-native-video/Video (6.8.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1485,7 +1485,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 3b6060bbf5317663667e1dd93560c7943ab86ccc
   React-logger: 257858bd55f3a4e1bc0cf07ddc8fb9faba6f8c7c
   React-Mapbuffer: 6c1cacdbf40b531f549eba249e531a7d0bfd8e7f
-  react-native-video: d78e478668d5472aa28a2e612785f5605991da93
+  react-native-video: 854c3152eedf203fdbd5fea46298a307885061bf
   React-nativeconfig: ba9a2e54e2f0882cf7882698825052793ed4c851
   React-NativeModulesApple: 8d11ff8955181540585c944cf48e9e7236952697
   React-perflogger: ed4e0c65781521e0424f2e5e40b40cc7879d737e
