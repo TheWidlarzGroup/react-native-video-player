@@ -9,7 +9,7 @@ As we approach the end of 2024, we've started working on the roadmap for this pr
 🎬 `<VideoPlayer />` component for React Native with a few controls. This player uses
 [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
 
-![demo gif](https://github.com/TheWidlarzGroup/react-native-video-player/blob/master/demo.gif?raw=true "Demo GIF")
+![demo gif](/demo.gif "Demo GIF")
 
 ## Installation
 
