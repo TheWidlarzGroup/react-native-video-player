@@ -31,11 +31,11 @@ import Video, {
   type ReactVideoSource,
   type OnPlaybackStateChangedData,
 } from 'react-native-video';
-import PlaySvg from '../icons/PlaySvg';
-import PauseSvg from '../icons/PauseSvg';
-import FullscreenSvg from '../icons/FullscreenSvg';
-import VolumeUpSvg from '../icons/VolumeUpSvg';
-import VolumeOffSvg from '../icons/VolumeOffSvg';
+import PlaySvg from './icons/PlaySvg';
+import PauseSvg from './icons/PauseSvg';
+import FullscreenSvg from './icons/FullscreenSvg';
+import VolumeUpSvg from './icons/VolumeUpSvg';
+import VolumeOffSvg from './icons/VolumeOffSvg';
 
 export type VideoPlayerRef = VideoRef & { stop: () => void };
 
