@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-player",
-  "version": "0.14.0",
+  "version": "0.15.0-beta.0",
   "description": "A <VideoPlayer /> component for React Native with controls",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
