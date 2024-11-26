@@ -358,10 +358,13 @@ const VideoPlayerComponent = forwardRef(
 
     const renderStartButton = useCallback(
       () => (
-        <TouchableOpacity style={[customStyles.playButton]} onPress={_onStart}>
+        <TouchableOpacity
+          style={[styles.playButton, customStyles.playButton]}
+          onPress={_onStart}
+        >
           <Image
-            source={require('./images/play_arrow.png')}
-            style={customStyles.playArrow}
+            source={require('./img/play.png')}
+            style={[styles.playArrow, customStyles.playArrow]}
           />
         </TouchableOpacity>
       ),
@@ -460,8 +463,8 @@ const VideoPlayerComponent = forwardRef(
             <Image
               source={
                 isPlaying
-                  ? require('./images/pause.png')
-                  : require('./images/play.png')
+                  ? require('./img/pause.png')
+                  : require('./img/play.png')
               }
             />
           </TouchableOpacity>
@@ -486,8 +489,8 @@ const VideoPlayerComponent = forwardRef(
               style={customStyles.controlIcon}
               source={
                 isMuted
-                  ? require('./images/volume_off.png')
-                  : require('./images/volume_on.png')
+                  ? require('./img/volume_off.png')
+                  : require('./img/volume_on.png')
               }
             />
           </TouchableOpacity>
@@ -498,7 +501,7 @@ const VideoPlayerComponent = forwardRef(
             >
               <Image
                 style={customStyles.controlIcon}
-                source={require('./images/fullscreen.png')}
+                source={require('./img/fullscreen.png')}
               />
             </TouchableOpacity>
           )}
@@ -625,11 +628,16 @@ const styles = StyleSheet.create({
   },
   playButton: {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 32,
     width: 64,
     height: 64,
-    borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  playArrow: {
+    width: 28,
+    height: 28,
+    marginLeft: 2,
   },
   video:
     +Platform.Version >= 24
