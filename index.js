@@ -416,7 +416,7 @@ export default class VideoPlayer extends Component {
   }
 
   renderThumbnail(thumbnail) {
-    const { style, customStyles, ...props } = this.props;
+    const { style, customStyles, onThumbnailError, ...props } = this.props;
     return (
       <BackgroundImage
         {...props}
@@ -427,6 +427,7 @@ export default class VideoPlayer extends Component {
           customStyles.thumbnail,
         ]}
         source={thumbnail}
+        onError={onThumbnailError}
       >
         {this.renderStartButton()}
       </BackgroundImage>
@@ -527,7 +528,6 @@ export default class VideoPlayer extends Component {
       video,
       style,
       resizeMode,
-      pauseOnPress,
       fullScreenOnLongPress,
       customStyles,
       ...props
@@ -564,8 +564,7 @@ export default class VideoPlayer extends Component {
             style={styles.overlayButton}
             onPress={() => {
               this.showControls();
-              if (pauseOnPress)
-                this.onPlayPress();
+              this.onPlayPress();
             }}
             onLongPress={() => {
               if (fullScreenOnLongPress && Platform.OS !== 'android')
@@ -627,7 +626,6 @@ VideoPlayer.propTypes = {
   hideControlsOnStart: PropTypes.bool,
   endWithThumbnail: PropTypes.bool,
   disableSeek: PropTypes.bool,
-  pauseOnPress: PropTypes.bool,
   fullScreenOnLongPress: PropTypes.bool,
   customStyles: PropTypes.shape({
     wrapper: ViewPropTypesVar.style,
@@ -668,7 +666,6 @@ VideoPlayer.defaultProps = {
   loop: false,
   resizeMode: 'contain',
   disableSeek: false,
-  pauseOnPress: false,
   fullScreenOnLongPress: false,
   customStyles: {},
   showDuration: false
