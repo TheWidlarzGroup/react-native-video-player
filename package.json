@@ -1,6 +1,6 @@
 {
   "name": "react-native-video-player",
-  "version": "0.14.0",
+  "version": "0.15.0-beta.2",
   "description": "A <VideoPlayer /> component for React Native with controls",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
@@ -19,7 +19,6 @@
   },
   "files": [
     "src",
-    "icons",
     "lib",
     "android",
     "ios",
@@ -117,11 +116,6 @@
     },
     "github": {
       "release": true
-    },
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "angular"
-      }
     }
   },
   "eslintConfig": {
@@ -185,7 +179,6 @@
     "version": "0.43.0"
   },
   "dependencies": {
-    "react-native-svg": "^15.8.0",
     "react-native-video": "6.8.0"
   }
 }
