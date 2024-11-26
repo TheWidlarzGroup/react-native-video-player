@@ -20,6 +20,7 @@ const App = () => {
       </Text>
       <VideoPlayer
         endWithThumbnail
+        pauseOnPress={true}
         thumbnail={{
           uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
         }}

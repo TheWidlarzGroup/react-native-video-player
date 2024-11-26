@@ -12295,7 +12295,6 @@ __metadata:
     react: 18.2.0
     react-native: 0.74.5
     react-native-builder-bob: ^0.31.0
-    react-native-svg: ^15.8.0
     react-native-video: 6.8.0
     release-it: ^17.10.0
     typescript: ^5.2.2

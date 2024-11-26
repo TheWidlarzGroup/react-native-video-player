@@ -179,7 +179,6 @@
     "version": "0.43.0"
   },
   "dependencies": {
-    "react-native-svg": "^15.8.0",
     "react-native-video": "6.8.0"
   }
 }

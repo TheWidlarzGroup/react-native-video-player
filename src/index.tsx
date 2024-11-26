@@ -21,6 +21,8 @@ import {
   type ViewStyle,
   type TextStyle,
   type DimensionValue,
+  Image,
+  type ImageStyle,
 } from 'react-native';
 import Video, {
   ResizeMode,
@@ -31,11 +33,6 @@ import Video, {
   type ReactVideoSource,
   type OnPlaybackStateChangedData,
 } from 'react-native-video';
-import PlaySvg from './icons/PlaySvg';
-import PauseSvg from './icons/PauseSvg';
-import FullscreenSvg from './icons/FullscreenSvg';
-import VolumeUpSvg from './icons/VolumeUpSvg';
-import VolumeOffSvg from './icons/VolumeOffSvg';
 
 export type VideoPlayerRef = VideoRef & { stop: () => void };
 
@@ -46,7 +43,7 @@ interface CustomStyles {
   controls?: StyleProp<ViewStyle>;
   playControl?: StyleProp<ViewStyle>;
   controlButton?: StyleProp<ViewStyle>;
-  controlIcon?: StyleProp<ViewStyle> & { color?: string };
+  controlIcon?: StyleProp<ImageStyle>;
   playIcon?: StyleProp<ViewStyle>;
   seekBar?: ViewStyle;
   seekBarFullWidth?: StyleProp<ViewStyle>;
@@ -56,7 +53,7 @@ interface CustomStyles {
   seekBarBackground?: StyleProp<ViewStyle>;
   thumbnail?: StyleProp<ViewStyle>;
   playButton?: StyleProp<ViewStyle>;
-  playArrow?: StyleProp<ViewStyle> & { color?: string };
+  playArrow?: StyleProp<ImageStyle>;
   durationText?: StyleProp<TextStyle>;
 }
 
@@ -139,7 +136,7 @@ const VideoPlayerComponent = forwardRef(
       disableFullscreen,
       repeat = false,
       resizeMode = 'contain',
-      hideControlsOnStart,
+      hideControlsOnStart = false,
       endWithThumbnail,
       disableSeek,
       pauseOnPress,
@@ -162,8 +159,7 @@ const VideoPlayerComponent = forwardRef(
     const [width, setWidth] = useState(200);
     const [progress, setProgress] = useState(0);
     const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
-    const [isControlsVisible, setIsControlsVisible] =
-      useState(!hideControlsOnStart);
+    const [isControlsVisible, setIsControlsVisible] = useState(false);
     const [duration, setDuration] = useState(0);
     const [isSeeking, setIsSeeking] = useState(false);
 
@@ -200,20 +196,19 @@ const VideoPlayerComponent = forwardRef(
     }));
 
     const _hideControls = useCallback(() => {
-      if (onHideControls) onHideControls();
-      if (disableControlsAutoHide) return;
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
-      controlsTimeoutRef.current = setTimeout(
-        () => setIsControlsVisible(false),
-        controlsTimeout
-      );
+      controlsTimeoutRef.current = setTimeout(() => {
+        if (onHideControls) onHideControls();
+        if (disableControlsAutoHide) return;
+        setIsControlsVisible(false);
+      }, controlsTimeout);
     }, [onHideControls, disableControlsAutoHide, controlsTimeout]);
 
     const _showControls = useCallback(() => {
-      if (onShowControls) onShowControls();
+      if (onShowControls && !isControlsVisible) onShowControls();
       setIsControlsVisible(true);
       _hideControls();
-    }, [_hideControls, onShowControls]);
+    }, [_hideControls, isControlsVisible, onShowControls]);
 
     useEffect(() => {
       if (autoplay) _hideControls();
@@ -364,10 +359,9 @@ const VideoPlayerComponent = forwardRef(
     const renderStartButton = useCallback(
       () => (
         <TouchableOpacity style={[customStyles.playButton]} onPress={_onStart}>
-          <PlaySvg
-            fill={customStyles.playArrow?.color}
+          <Image
+            source={require('./images/play_arrow.png')}
             style={customStyles.playArrow}
-            size={42}
           />
         </TouchableOpacity>
       ),
@@ -463,14 +457,13 @@ const VideoPlayerComponent = forwardRef(
               customStyles.playControl,
             ]}
           >
-            {isPlaying ? (
-              <PauseSvg
-                fill={customStyles.controlIcon?.color}
-                style={customStyles.controlIcon}
-              />
-            ) : (
-              <PlaySvg fill={customStyles.controlIcon?.color} />
-            )}
+            <Image
+              source={
+                isPlaying
+                  ? require('./images/pause.png')
+                  : require('./images/play.png')
+              }
+            />
           </TouchableOpacity>
           {renderSeekBar()}
           {showDuration && (
@@ -489,26 +482,23 @@ const VideoPlayerComponent = forwardRef(
             onPress={_onMutePress}
             style={[styles.extraControl, customStyles.controlButton]}
           >
-            {isMuted ? (
-              <VolumeOffSvg
-                fill={customStyles.controlIcon?.color}
-                style={customStyles.controlIcon}
-              />
-            ) : (
-              <VolumeUpSvg
-                fill={customStyles.controlIcon?.color}
-                style={customStyles.controlIcon}
-              />
-            )}
+            <Image
+              style={customStyles.controlIcon}
+              source={
+                isMuted
+                  ? require('./images/volume_off.png')
+                  : require('./images/volume_on.png')
+              }
+            />
           </TouchableOpacity>
           {!disableFullscreen && (
             <TouchableOpacity
               onPress={onToggleFullScreen}
               style={[styles.extraControl, customStyles.controlButton]}
             >
-              <FullscreenSvg
-                fill={customStyles.controlIcon?.color}
+              <Image
                 style={customStyles.controlIcon}
+                source={require('./images/fullscreen.png')}
               />
             </TouchableOpacity>
           )}
