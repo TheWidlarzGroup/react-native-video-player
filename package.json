@@ -80,6 +80,7 @@
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-builder-bob": "^0.31.0",
+    "react-native-video": "^6.8.0",
     "release-it": "^17.10.0",
     "typescript": "^5.2.2"
   },
@@ -88,7 +89,8 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-video": "^6.8.0"
   },
   "workspaces": [
     "example"
@@ -177,8 +179,5 @@
   "create-react-native-library": {
     "type": "library",
     "version": "0.43.0"
-  },
-  "dependencies": {
-    "react-native-video": "6.8.0"
   }
 }
