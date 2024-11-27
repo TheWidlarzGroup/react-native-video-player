@@ -14,12 +14,12 @@ As we approach the end of 2024, we've started working on the roadmap for this pr
 ## Installation
 
 ```
-yarn add react-native-video-player
+yarn add react-native-video-player@beta react-native-video
 ```
 
 or
 ```
-npm install --save react-native-video-player
+npm install --save react-native-video-player@beta react-native-video
 ```
 
 Then, install pods
