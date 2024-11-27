@@ -1,16 +1,26 @@
 {
-  "name": "example",
-  "version": "0.0.1",
-  "private": true,
+  "name": "react-native-video-player-example",
+  "version": "1.0.0",
+  "main": "expo/AppEntry.js",
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
   },
   "dependencies": {
-    "prop-types": "^15.5.10",
-    "react": "16.0.0-alpha.12",
-    "react-native": "0.46.4",
-    "react-native-vector-icons": "^4.0.0",
-    "react-native-video": "^2.0.0",
-    "react-native-video-player": "../"
-  }
+    "@expo/metro-runtime": "~3.2.3",
+    "expo": "~51.0.28",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-video": "6.8.0",
+    "react-native-web": "~0.19.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "react-native-builder-bob": "^0.31.0"
+  },
+  "private": true
 }
