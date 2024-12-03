@@ -54,7 +54,7 @@ pod install
 Check out our [Roadmap](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186) for what's coming up next! We're always working on new features and improvements, so stay tuned!
 
 ## Community support
-We have an discord server where you can ask questions and get help. [Join the discord server](https://discord.gg/WXuM4Tgb9X)
+We have a discord server where you can ask questions and get help. [Join the discord server](https://discord.gg/WXuM4Tgb9X)
 
 ## Enterprise Support
 <p>
