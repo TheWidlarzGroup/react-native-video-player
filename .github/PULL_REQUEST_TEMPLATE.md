@@ -4,7 +4,7 @@ Since this is a volunteer project and is very active, anything you can do to red
 The following steps will help get your PR merged quickly:
 
 - Update the documentation
-If you've added new functionality, update the README.md with an entry for your prop or event.
+If you've added new functionality, update the documentation with an entry for your prop or event.
 The entry should be inserted in alphabetical order.
 
 - Provide an example of how to test the change
