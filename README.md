@@ -6,7 +6,7 @@ As we approach the end of 2024, we've started working on the roadmap for this pr
 
 # react-native-video-player
 
-🎬 `<VideoPlayer />` component for React Native with a few controls. This player uses
+🎥 `<VideoPlayer />` component for React Native with a few controls. This player uses
 [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
 
 ![demo video](/demo.mp4 "Demo video")
