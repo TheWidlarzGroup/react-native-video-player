@@ -1,3 +1,6 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
 # Introduction
 
 Welcome to **react-native-video-player**, a lightweight and user-friendly video player for React Native. Built on the reliable [react-native-video](https://github.com/TheWidlarzGroup/react-native-video), this library simplifies the integration of video playback with custom controls and enhanced functionality. Whether you're a seasoned developer or just starting with React Native, `react-native-video-player` offers a straightforward way to add rich video experiences to your app.
@@ -30,3 +33,11 @@ Whether you're creating a social media app, an e-learning platform, or a media p
 - [Enterprise Support](https://www.thewidlarzgroup.com/?utm_source=rnvp&utm_medium=docs#Contact): Need professional help? Reach out for integration, customization, or maintenance support.
 
 We’re excited to have you onboard. Let’s build something awesome together! 🚀
+
+<ThemedImage
+alt="Docusaurus themed image"
+sources={{
+light: useBaseUrl('/img/banners/twg-light.png'),
+dark: useBaseUrl('/img/banners/twg-dark.png'),
+}}
+/>
