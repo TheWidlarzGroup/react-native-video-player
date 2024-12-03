@@ -60,3 +60,10 @@ We have a discord server where you can ask questions and get help. [Join the dis
 <p>
   📱 <i>react-native-video-player</i> is provided <i>as it is</i>. For enterprise support or other business inquiries, <a href="https://www.thewidlarzgroup.com/?utm_source=rnv&utm_medium=readme#Contact">please contact us 🤝</a>. We can help you with the integration, customization and maintenance. We are providing both free and commercial support for this project. let's build something awesome together! 🚀
 </p>
+<a href="https://www.thewidlarzgroup.com/?utm_source=rnvp&utm_medium=readme">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./docs/static/img/banners/twg-dark.png" />
+    <source media="(prefers-color-scheme: light)" srcset="./docs/static/img/banners/twg-light.png" />
+    <img alt="TheWidlarzGroup" src="./docs/static/img/banners/twg-light.png" />
+  </picture>
+</a>
