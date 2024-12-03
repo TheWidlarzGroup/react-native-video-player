@@ -25,6 +25,7 @@ It is configured to use the local version of the library, so any changes you mak
 
 You can use various commands from the root directory to work with the project.
 
+#### Example
 To start the packager:
 
 ```sh
@@ -66,6 +67,28 @@ Remember to add tests for your change if possible. Run the unit tests by:
 
 ```sh
 yarn test
+```
+
+#### Documentation
+
+To run the documentation locally, follow these steps:
+
+1. Navigate to the docs folder:
+
+```sh
+cd docs
+```
+
+2. Install the dependencies:
+
+```sh
+yarn install
+```
+
+3. Start the documentation server:
+
+```sh
+yarn start
 ```
 
 ### Commit message convention
