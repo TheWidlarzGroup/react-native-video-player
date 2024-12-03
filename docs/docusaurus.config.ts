@@ -54,9 +54,12 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          href: 'https://github.com/TheWidlarzGroup/react-native-video-player',
-          label: 'GitHub',
-          position: 'right',
+          'href':
+            'https://github.com/TheWidlarzGroup/react-native-video-player',
+          // label: 'GitHub',
+          'position': 'right',
+          'className': 'header-github-link',
+          'aria-label': 'GitHub repository',
         },
       ],
     },
