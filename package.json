@@ -25,6 +25,7 @@
     "cpp",
     "*.podspec",
     "react-native.config.json",
+    "!docs",
     "!ios/build",
     "!android/build",
     "!android/gradle",
@@ -93,13 +94,15 @@
     "react-native-video": "^6.8.0"
   },
   "workspaces": [
-    "example"
+    "example",
+    "docs"
   ],
   "packageManager": "yarn@3.6.1",
   "jest": {
     "preset": "react-native",
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
+      "<rootDir>/docs/node_modules",
       "<rootDir>/lib/"
     ]
   },
