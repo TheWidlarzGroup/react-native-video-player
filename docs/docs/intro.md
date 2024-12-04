@@ -30,7 +30,7 @@ Whether you're creating a social media app, an e-learning platform, or a media p
 - [Api](/docs/category/api): Explore all available props, styles, and customization options.
 - **Community**: Join our [Discord server](https://discord.gg/7Y6eE62hXM) to connect with other developers, ask questions, and share your feedback.
 - [Roadmap](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186): See what’s coming next for this library.
-- [Enterprise Support](https://www.thewidlarzgroup.com/?utm_source=rnvp&utm_medium=docs#Contact): Need professional help? Reach out for integration, customization, or maintenance support.
+- [Enterprise Support](https://www.thewidlarzgroup.com/?utm_source=rnvp&utm_medium=docs#Contact): Need professional help such as custom video solutions? Contact us for integration, customization, or maintenance support.
 
 We’re excited to have you onboard. Let’s build something awesome together! 🚀
 
