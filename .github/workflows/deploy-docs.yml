@@ -2,6 +2,7 @@ name: Deploy Documentation
 
 on:
   workflow_dispatch:
+  push:
     branches:
       - master
     paths:
@@ -10,6 +11,8 @@ on:
 jobs:
   build_and_deploy_docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,5 +37,3 @@ jobs:
           publish_dir: ./docs/build
           user_name: github-actions[bot]
           user_email: 41898282+github-actions[bot]@users.noreply.github.com
-permissions:
-  contents: write
