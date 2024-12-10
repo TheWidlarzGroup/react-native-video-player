@@ -23,6 +23,7 @@ import {
   type DimensionValue,
   Image,
   type ImageStyle,
+  Animated,
 } from 'react-native';
 import Video, {
   ResizeMode,
@@ -89,6 +90,7 @@ interface VideoPlayerComponentProps extends ReactVideoProps {
   onShowControls?: () => void;
   onMutePress?: (isMuted: boolean) => void;
   showDuration?: boolean;
+  animationDuration?: number;
 }
 
 const getDurationTime = (duration: number): string => {
@@ -151,6 +153,7 @@ const VideoPlayerComponent = forwardRef(
       onShowControls,
       onMutePress,
       showDuration = false,
+      animationDuration = 100,
     } = props;
 
     const [isStarted, setIsStarted] = useState(autoplay);
@@ -170,6 +173,13 @@ const VideoPlayerComponent = forwardRef(
     const seekTouchStart = useRef<number>(0);
     const seekProgressStart = useRef<number>(0);
     const wasPlayingBeforeSeek = useRef<boolean>(autoplay);
+
+    const animationValue = useRef(new Animated.Value(0)).current;
+
+    const controlsTranslateY = animationValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [48, 0],
+    });
 
     const getSizeStyles = useCallback(() => {
       const ratio = videoHeight / videoWidth;
@@ -197,18 +207,45 @@ const VideoPlayerComponent = forwardRef(
 
     const _hideControls = useCallback(() => {
       if (controlsTimeoutRef.current) clearTimeout(controlsTimeoutRef.current);
+
       controlsTimeoutRef.current = setTimeout(() => {
         if (onHideControls) onHideControls();
         if (disableControlsAutoHide) return;
-        setIsControlsVisible(false);
+
+        Animated.timing(animationValue, {
+          toValue: 0.1,
+          duration: animationDuration,
+          useNativeDriver: true,
+        }).start(() => {
+          setIsControlsVisible(false);
+        });
       }, controlsTimeout);
-    }, [onHideControls, disableControlsAutoHide, controlsTimeout]);
+    }, [
+      controlsTimeout,
+      onHideControls,
+      disableControlsAutoHide,
+      animationValue,
+      animationDuration,
+    ]);
 
     const _showControls = useCallback(() => {
       if (onShowControls && !isControlsVisible) onShowControls();
       setIsControlsVisible(true);
+
+      Animated.timing(animationValue, {
+        toValue: 1,
+        duration: animationDuration,
+        useNativeDriver: true,
+      }).start();
+
       _hideControls();
-    }, [_hideControls, isControlsVisible, onShowControls]);
+    }, [
+      onShowControls,
+      isControlsVisible,
+      animationValue,
+      animationDuration,
+      _hideControls,
+    ]);
 
     useEffect(() => {
       if (autoplay) _hideControls();
@@ -451,7 +488,13 @@ const VideoPlayerComponent = forwardRef(
 
     const renderControls = useCallback(
       () => (
-        <View style={[styles.controls, customStyles.controls]}>
+        <Animated.View
+          style={[
+            styles.controls,
+            customStyles.controls,
+            { transform: [{ translateY: controlsTranslateY }] },
+          ]}
+        >
           <TouchableOpacity
             onPress={_onPlayPress}
             style={[
@@ -505,14 +548,15 @@ const VideoPlayerComponent = forwardRef(
               />
             </TouchableOpacity>
           )}
-        </View>
+        </Animated.View>
       ),
       [
         customStyles.controls,
         customStyles.controlButton,
         customStyles.playControl,
-        customStyles.controlIcon,
         customStyles.durationText,
+        customStyles.controlIcon,
+        controlsTranslateY,
         _onPlayPress,
         isPlaying,
         renderSeekBar,
@@ -529,7 +573,7 @@ const VideoPlayerComponent = forwardRef(
 
     const renderVideo = useCallback(
       () => (
-        <View style={customStyles.videoWrapper}>
+        <View style={[{ overflow: 'hidden' }, customStyles.videoWrapper]}>
           <Video
             {...props}
             ref={videoRef}
