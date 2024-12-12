@@ -8,7 +8,11 @@ As we approach the end of 2024, we've started working on the roadmap for this pr
 
 🎥 `<VideoPlayer />` component for React Native with a few controls. This player uses [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
 
-[![Demo video](./demo.png)](./demo.mp4 "Demo video")
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/e7e45760-54d0-403e-94bf-2a02ee49a9ee">
+    Demo video
+  </video>
+</div>
 
 ## Documentation
 documentation is available at [docs.thewidlarzgroup.com/react-native-video-player/](https://docs.thewidlarzgroup.com/react-native-video-player/)
