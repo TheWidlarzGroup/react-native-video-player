@@ -16,12 +16,12 @@ documentation is available at [docs.thewidlarzgroup.com/react-native-video-playe
 ## Installation
 
 ```
-yarn add react-native-video-player@beta react-native-video
+yarn add react-native-video-player react-native-video
 ```
 
 or
 ```
-npm install --save react-native-video-player@beta react-native-video
+npm install --save react-native-video-player react-native-video
 ```
 
 Then, install pods
