@@ -14,12 +14,12 @@ Select your package manager below to see the appropriate installation command:
 <Tabs groupId="package-managers">
   <TabItem value="npm" label="NPM">
   ```bash
-  npm install react-native-video-player@beta react-native-video
+  npm install react-native-video-player react-native-video
   ```
   </TabItem>
   <TabItem value="yarn" label="YARN" default>
   ```bash
-  yarn add react-native-video-player@beta react-native-video
+  yarn add react-native-video-player react-native-video
   ```
   </TabItem>
 </Tabs>

@@ -8,7 +8,11 @@ As we approach the end of 2024, we've started working on the roadmap for this pr
 
 🎥 `<VideoPlayer />` component for React Native with a few controls. This player uses [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
 
-https://github.com/user-attachments/assets/1bbec058-4f4c-4ab0-9f14-1454c901b474
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/e7e45760-54d0-403e-94bf-2a02ee49a9ee">
+    Demo video
+  </video>
+</div>
 
 ## Documentation
 documentation is available at [docs.thewidlarzgroup.com/react-native-video-player/](https://docs.thewidlarzgroup.com/react-native-video-player/)
@@ -16,12 +20,12 @@ documentation is available at [docs.thewidlarzgroup.com/react-native-video-playe
 ## Installation
 
 ```
-yarn add react-native-video-player@beta react-native-video
+yarn add react-native-video-player react-native-video
 ```
 
 or
 ```
-npm install --save react-native-video-player@beta react-native-video
+npm install --save react-native-video-player react-native-video
 ```
 
 Then, install pods
