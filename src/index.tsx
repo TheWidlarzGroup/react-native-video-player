@@ -5,22 +5,19 @@ import {
   useCallback,
   useImperativeHandle,
   forwardRef,
+  useMemo,
 } from 'react';
 import {
   ImageBackground,
   Platform,
   StyleSheet,
-  Text,
-  TextInput,
   TouchableOpacity,
   View,
   type LayoutChangeEvent,
-  type GestureResponderEvent,
   type ImageSourcePropType,
   type StyleProp,
   type ViewStyle,
   type TextStyle,
-  type DimensionValue,
   Image,
   type ImageStyle,
   Animated,
@@ -34,10 +31,11 @@ import Video, {
   type ReactVideoSource,
   type OnPlaybackStateChangedData,
 } from 'react-native-video';
+import { Controls, type ControlsRef } from './Controls';
 
 export type VideoPlayerRef = VideoRef & { stop: () => void };
 
-interface CustomStyles {
+export interface CustomStyles {
   wrapper?: StyleProp<ViewStyle>;
   video?: StyleProp<ViewStyle>;
   videoWrapper?: StyleProp<ViewStyle>;
@@ -58,133 +56,115 @@ interface CustomStyles {
   durationText?: StyleProp<TextStyle>;
 }
 
-interface VideoPlayerComponentProps extends ReactVideoProps {
-  source: ReactVideoSource;
-  thumbnail?: ImageSourcePropType;
-  endThumbnail?: ImageSourcePropType;
-  videoWidth?: number;
-  videoHeight?: number;
-  duration?: number;
+export interface VideoPlayerComponentProps extends ReactVideoProps {
+  animationDuration?: number;
   autoplay?: boolean;
-  paused?: boolean;
-  defaultMuted?: boolean;
-  muted?: boolean;
-  style?: StyleProp<ViewStyle>;
   controlsTimeout?: number;
+  customStyles?: CustomStyles;
+  defaultMuted?: boolean;
   disableControlsAutoHide?: boolean;
   disableFullscreen?: boolean;
-  loop?: boolean;
-  resizeMode?: ResizeMode;
-  hideControlsOnStart?: boolean;
-  endWithThumbnail?: boolean;
   disableSeek?: boolean;
-  pauseOnPress?: boolean;
+  duration?: number;
+  endThumbnail?: ImageSourcePropType;
+  endWithThumbnail?: boolean;
   fullScreenOnLongPress?: boolean;
-  customStyles?: CustomStyles;
+  hideControlsOnStart?: boolean;
+  loop?: boolean;
+  muted?: boolean;
   onEnd?: () => void;
-  onProgress?: (event: OnProgressData) => void;
-  onLoad?: (event: OnLoadData) => void;
-  onStart?: () => void;
-  onPlayPress?: () => void;
   onHideControls?: () => void;
-  onShowControls?: () => void;
+  onLoad?: (event: OnLoadData) => void;
   onMutePress?: (isMuted: boolean) => void;
+  onPlayPress?: () => void;
+  onProgress?: (event: OnProgressData) => void;
+  onShowControls?: () => void;
+  onStart?: () => void;
+  pauseOnPress?: boolean;
+  paused?: boolean;
+  resizeMode?: ResizeMode;
   showDuration?: boolean;
-  animationDuration?: number;
+  source: ReactVideoSource;
+  style?: StyleProp<ViewStyle>;
+  thumbnail?: ImageSourcePropType;
+  videoHeight?: number;
+  videoWidth?: number;
 }
-
-const getDurationTime = (duration: number): string => {
-  const padTimeValueString = (value: number): string =>
-    value.toString().padStart(2, '0');
-
-  if (!Number.isFinite(duration)) return '';
-
-  const seconds = Math.floor(duration % 60),
-    minutes = Math.floor((duration / 60) % 60),
-    hours = Math.floor((duration / 3600) % 24);
-
-  return hours
-    ? `${padTimeValueString(hours)}:${padTimeValueString(minutes)}:${padTimeValueString(seconds)}`
-    : `${padTimeValueString(minutes)}:${padTimeValueString(seconds)}`;
-};
-
-const parsePadding = (value: DimensionValue, layoutWidth: number) => {
-  if (typeof value === 'number') {
-    return value;
-  }
-  if (typeof value === 'string' && value.endsWith('%')) {
-    const percent = parseFloat(value) / 100;
-    return layoutWidth * percent;
-  }
-
-  return 0;
-};
 
 const VideoPlayerComponent = forwardRef(
   (props: VideoPlayerComponentProps, ref) => {
     const {
-      source,
-      thumbnail,
-      endThumbnail,
-      videoWidth = 1920,
-      videoHeight = 1080,
+      animationDuration = 100,
       autoplay = false,
-      paused,
-      defaultMuted,
-      muted,
-      style,
       controlsTimeout = 2000,
+      customStyles = {},
+      defaultMuted,
       disableControlsAutoHide,
       disableFullscreen,
+      disableSeek,
+      endThumbnail,
+      endWithThumbnail,
+      fullScreenOnLongPress,
+      hideControlsOnStart = false,
+      muted,
+      onEnd,
+      onHideControls,
+      onLoad,
+      onMutePress,
+      onPlayPress,
+      onProgress,
+      onShowControls,
+      onStart,
+      pauseOnPress,
+      paused,
       repeat = false,
       resizeMode = 'contain',
-      hideControlsOnStart = false,
-      endWithThumbnail,
-      disableSeek,
-      pauseOnPress,
-      fullScreenOnLongPress,
-      customStyles = {},
-      onEnd,
-      onProgress,
-      onLoad,
-      onStart,
-      onPlayPress,
-      onHideControls,
-      onShowControls,
-      onMutePress,
       showDuration = false,
-      animationDuration = 100,
+      source,
+      style,
+      thumbnail,
+      videoHeight = 1080,
+      videoWidth = 1920,
     } = props;
 
     const [isStarted, setIsStarted] = useState(autoplay);
     const [isPlaying, setIsPlaying] = useState(autoplay);
     const [hasEnded, setHasEnded] = useState(false);
     const [width, setWidth] = useState(200);
-    const [progress, setProgress] = useState(0);
     const [isMuted, setIsMuted] = useState(defaultMuted ?? false);
     const [isControlsVisible, setIsControlsVisible] = useState(false);
     const [duration, setDuration] = useState(0);
-    const [isSeeking, setIsSeeking] = useState(false);
 
     const videoRef = useRef<VideoRef>(null);
+    // ref to keeps progress to avoid re-rendering
+    const progressRef = useRef<number>(0);
+    // ref to pass progress to controls (in ref to avoid re-rendering)
+    const controlsRef = useRef<ControlsRef>(null);
+    // ref to keep timeout id to clear it on unmount
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    const seekBarWidth = useRef<number>(200);
-    const seekTouchStart = useRef<number>(0);
-    const seekProgressStart = useRef<number>(0);
-    const wasPlayingBeforeSeek = useRef<boolean>(autoplay);
 
     const animationValue = useRef(new Animated.Value(0)).current;
 
-    const controlsTranslateY = animationValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [48, 0],
-    });
-
-    const getSizeStyles = useCallback(() => {
+    const getSizeStyles = useMemo(() => {
       const ratio = videoHeight / videoWidth;
       return { height: width * ratio, width: width };
     }, [videoWidth, videoHeight, width]);
+
+    const runControlsAnimation = useCallback(
+      (toValue: number, callback?: () => void) => {
+        Animated.timing(animationValue, {
+          toValue,
+          duration: animationDuration,
+          useNativeDriver: true,
+        }).start(callback);
+      },
+      [animationDuration, animationValue]
+    );
+
+    const setProgress = useCallback((progress: number) => {
+      progressRef.current = progress;
+      controlsRef.current?.onProgress(progress);
+    }, []);
 
     useImperativeHandle(ref, () => ({
       ...videoRef.current,
@@ -212,11 +192,7 @@ const VideoPlayerComponent = forwardRef(
         if (onHideControls) onHideControls();
         if (disableControlsAutoHide) return;
 
-        Animated.timing(animationValue, {
-          toValue: 0.1,
-          duration: animationDuration,
-          useNativeDriver: true,
-        }).start(() => {
+        runControlsAnimation(0.1, () => {
           setIsControlsVisible(false);
         });
       }, controlsTimeout);
@@ -224,27 +200,27 @@ const VideoPlayerComponent = forwardRef(
       controlsTimeout,
       onHideControls,
       disableControlsAutoHide,
-      animationValue,
-      animationDuration,
+      runControlsAnimation,
     ]);
 
     const _showControls = useCallback(() => {
       if (onShowControls && !isControlsVisible) onShowControls();
       setIsControlsVisible(true);
 
-      Animated.timing(animationValue, {
-        toValue: 1,
-        duration: animationDuration,
-        useNativeDriver: true,
-      }).start();
+      runControlsAnimation(1);
 
       _hideControls();
+
+      // force re-render to update progress, because setProgress was called when controls are hidden
+      setTimeout(() => {
+        setProgress(progressRef.current);
+      }, 0);
     }, [
       onShowControls,
       isControlsVisible,
-      animationValue,
-      animationDuration,
+      runControlsAnimation,
       _hideControls,
+      setProgress,
     ]);
 
     useEffect(() => {
@@ -258,23 +234,27 @@ const VideoPlayerComponent = forwardRef(
       };
     }, [_hideControls, autoplay]);
 
-    const onLayout = useCallback((event: LayoutChangeEvent) => {
-      const { width } = event.nativeEvent.layout;
-      setWidth(width);
-    }, []);
-
     const _onStart = useCallback(() => {
       if (onStart) onStart();
       setIsPlaying(true);
       setIsStarted(true);
       setHasEnded(false);
-      setProgress((prev) => (prev >= 1 ? 0 : prev));
+
+      setProgress(progressRef.current >= 1 ? 0 : progressRef.current);
+
       hideControlsOnStart ? _hideControls() : _showControls();
-    }, [_hideControls, _showControls, hideControlsOnStart, onStart]);
+    }, [
+      _hideControls,
+      _showControls,
+      hideControlsOnStart,
+      onStart,
+      setProgress,
+    ]);
 
     const _onProgress = useCallback(
       (event: OnProgressData) => {
-        if (isSeeking) return;
+        if (controlsRef.current?.isSeeking) return;
+
         if (onProgress) onProgress(event);
 
         if (isNaN(props?.duration || 0) && isNaN(duration)) {
@@ -285,7 +265,7 @@ const VideoPlayerComponent = forwardRef(
 
         setProgress(event.currentTime / (props.duration || duration));
       },
-      [isSeeking, onProgress, duration, props.duration]
+      [onProgress, props.duration, duration, setProgress]
     );
 
     const _onEnd = useCallback(() => {
@@ -298,7 +278,7 @@ const VideoPlayerComponent = forwardRef(
       setProgress(1);
       setIsPlaying(repeat);
       if (repeat) videoRef.current?.seek(0);
-    }, [onEnd, endWithThumbnail, endThumbnail, repeat]);
+    }, [onEnd, endWithThumbnail, endThumbnail, setProgress, repeat]);
 
     const _onLoad = useCallback(
       (event: OnLoadData) => {
@@ -312,12 +292,12 @@ const VideoPlayerComponent = forwardRef(
       if (onPlayPress) onPlayPress();
       setIsPlaying((prev) => !prev);
 
-      if (progress >= 1) {
+      if (progressRef.current >= 1) {
         videoRef.current?.seek(0);
       }
 
       _showControls();
-    }, [_showControls, onPlayPress, progress]);
+    }, [_showControls, onPlayPress]);
 
     const _onMutePress = useCallback(() => {
       const newMutedState = !isMuted;
@@ -326,71 +306,28 @@ const VideoPlayerComponent = forwardRef(
       _showControls();
     }, [isMuted, onMutePress, _showControls]);
 
-    const onToggleFullScreen = useCallback(() => {
-      videoRef.current?.presentFullscreenPlayer();
-    }, []);
-
-    const onSeekBarLayout = useCallback(
-      ({ nativeEvent }: LayoutChangeEvent) => {
-        const layoutWidth = nativeEvent.layout.width;
-        const customStyle = customStyles.seekBar;
-
-        const paddingHorizontal = customStyle?.paddingHorizontal
-          ? parsePadding(customStyle.paddingHorizontal, layoutWidth) * 2
-          : 0;
-        const paddingLeft = customStyle?.paddingLeft
-          ? parsePadding(customStyle.paddingLeft, layoutWidth)
-          : 0;
-        const paddingRight = customStyle?.paddingRight
-          ? parsePadding(customStyle.paddingRight, layoutWidth)
-          : 0;
-
-        const totalPadding = paddingHorizontal || paddingLeft + paddingRight;
-        seekBarWidth.current = layoutWidth - totalPadding;
-      },
-      [customStyles.seekBar]
-    );
-
-    const onSeekGrant = useCallback(
-      (e: GestureResponderEvent) => {
-        seekTouchStart.current = e.nativeEvent.pageX;
-        seekProgressStart.current = progress;
-        wasPlayingBeforeSeek.current = isPlaying;
-        setIsSeeking(true);
-        setIsPlaying(false);
-
-        if (controlsTimeoutRef.current)
-          clearTimeout(controlsTimeoutRef.current);
-      },
-      [progress, isPlaying]
-    );
-
-    const onSeekRelease = useCallback(() => {
-      setIsSeeking(false);
-      setIsPlaying(wasPlayingBeforeSeek.current);
-      _showControls();
-    }, [_showControls]);
-
-    const onSeek = useCallback(
-      (e: GestureResponderEvent) => {
-        const diff = e.nativeEvent.pageX - seekTouchStart.current;
-        const ratio = 100 / seekBarWidth.current;
-        const newProgress = seekProgressStart.current + (ratio * diff) / 100;
-
-        const fixedProgress =
-          newProgress < 0 ? 0 : newProgress > 1 ? 1 : newProgress;
-
-        setProgress(fixedProgress);
-        videoRef.current?.seek(newProgress * duration);
-      },
-      [duration]
-    );
-
     const _onPlaybackStateChanged = useCallback(
       (data: OnPlaybackStateChangedData) => {
         if (data.isPlaying !== isPlaying) setIsPlaying(data.isPlaying);
       },
       [isPlaying]
+    );
+
+    const onToggleFullScreen = useCallback(() => {
+      videoRef.current?.presentFullscreenPlayer();
+    }, []);
+
+    const onLayout = useCallback((event: LayoutChangeEvent) => {
+      const { width } = event.nativeEvent.layout;
+      setWidth(width);
+    }, []);
+
+    const seek = useCallback(
+      (progress: number) => {
+        videoRef.current?.seek(progress);
+        setProgress(progress / (props.duration || duration));
+      },
+      [duration, props.duration, setProgress]
     );
 
     const renderStartButton = useCallback(
@@ -414,7 +351,7 @@ const VideoPlayerComponent = forwardRef(
           source={thumbnailSource}
           style={[
             styles.thumbnail,
-            getSizeStyles(),
+            getSizeStyles,
             style,
             customStyles.thumbnail,
           ]}
@@ -425,159 +362,13 @@ const VideoPlayerComponent = forwardRef(
       [getSizeStyles, renderStartButton, style, customStyles.thumbnail]
     );
 
-    const renderSeekBar = useCallback(
-      (fullWidth?: boolean) => (
-        <View
-          style={[
-            styles.seekBar,
-            customStyles.seekBar,
-            fullWidth && styles.seekBarFullWidth,
-            fullWidth && customStyles.seekBarFullWidth,
-          ]}
-          onLayout={onSeekBarLayout}
-        >
-          <View
-            style={[
-              !isNaN(progress) ? { flexGrow: progress } : null,
-              styles.seekBarProgress,
-              customStyles.seekBarProgress,
-            ]}
-          />
-          {!fullWidth && !disableSeek && (
-            <View
-              style={[
-                styles.seekBarKnob,
-                customStyles.seekBarKnob,
-                isSeeking && styles.seekBarKnobSeeking,
-                isSeeking && customStyles.seekBarKnobSeeking,
-              ]}
-              hitSlop={{ top: 20, bottom: 20, left: 10, right: 20 }}
-              onStartShouldSetResponder={() => true}
-              onMoveShouldSetResponder={() => true}
-              onResponderGrant={onSeekGrant}
-              onResponderMove={onSeek}
-              onResponderRelease={onSeekRelease}
-              onResponderTerminate={onSeekRelease}
-            />
-          )}
-          <View
-            style={[
-              styles.seekBarBackground,
-              !isNaN(progress) ? { flexGrow: 1 - progress } : null,
-              customStyles.seekBarBackground,
-            ]}
-          />
-        </View>
-      ),
-      [
-        customStyles.seekBar,
-        customStyles.seekBarFullWidth,
-        customStyles.seekBarProgress,
-        customStyles.seekBarKnob,
-        customStyles.seekBarKnobSeeking,
-        customStyles.seekBarBackground,
-        onSeekBarLayout,
-        progress,
-        disableSeek,
-        isSeeking,
-        onSeekGrant,
-        onSeek,
-        onSeekRelease,
-      ]
-    );
-
-    const renderControls = useCallback(
-      () => (
-        <Animated.View
-          style={[
-            styles.controls,
-            customStyles.controls,
-            { transform: [{ translateY: controlsTranslateY }] },
-          ]}
-        >
-          <TouchableOpacity
-            onPress={_onPlayPress}
-            style={[
-              styles.playControl,
-              customStyles.controlButton,
-              customStyles.playControl,
-            ]}
-          >
-            <Image
-              source={
-                isPlaying
-                  ? require('./img/pause.png')
-                  : require('./img/play.png')
-              }
-            />
-          </TouchableOpacity>
-          {renderSeekBar()}
-          {showDuration && (
-            <>
-              <TextInput
-                style={[styles.durationText, customStyles.durationText]}
-                editable={false}
-                value={getDurationTime(progress * (props.duration || duration))}
-              />
-              <Text style={[styles.durationText, customStyles.durationText]}>
-                {` / ${getDurationTime(props.duration || duration)}`}
-              </Text>
-            </>
-          )}
-          <TouchableOpacity
-            onPress={_onMutePress}
-            style={[styles.extraControl, customStyles.controlButton]}
-          >
-            <Image
-              style={customStyles.controlIcon}
-              source={
-                isMuted
-                  ? require('./img/volume_off.png')
-                  : require('./img/volume_on.png')
-              }
-            />
-          </TouchableOpacity>
-          {!disableFullscreen && (
-            <TouchableOpacity
-              onPress={onToggleFullScreen}
-              style={[styles.extraControl, customStyles.controlButton]}
-            >
-              <Image
-                style={customStyles.controlIcon}
-                source={require('./img/fullscreen.png')}
-              />
-            </TouchableOpacity>
-          )}
-        </Animated.View>
-      ),
-      [
-        customStyles.controls,
-        customStyles.controlButton,
-        customStyles.playControl,
-        customStyles.durationText,
-        customStyles.controlIcon,
-        controlsTranslateY,
-        _onPlayPress,
-        isPlaying,
-        renderSeekBar,
-        showDuration,
-        progress,
-        props.duration,
-        duration,
-        _onMutePress,
-        isMuted,
-        disableFullscreen,
-        onToggleFullScreen,
-      ]
-    );
-
     const renderVideo = useCallback(
       () => (
         <View style={[{ overflow: 'hidden' }, customStyles.videoWrapper]}>
           <Video
             {...props}
             ref={videoRef}
-            style={[styles.video, getSizeStyles(), style, customStyles.video]}
+            style={[styles.video, getSizeStyles, style, customStyles.video]}
             muted={muted || isMuted}
             paused={paused || !isPlaying}
             onProgress={_onProgress}
@@ -597,12 +388,30 @@ const VideoPlayerComponent = forwardRef(
               if (fullScreenOnLongPress) onToggleFullScreen();
             }}
           />
-          {isControlsVisible ? renderControls() : renderSeekBar(true)}
+          <Controls
+            ref={controlsRef}
+            customStyles={customStyles}
+            showDuration={showDuration}
+            disableFullscreen={disableFullscreen}
+            duration={props.duration || duration}
+            isPlaying={isPlaying}
+            isMuted={isMuted}
+            onPlayPress={_onPlayPress}
+            onMutePress={_onMutePress}
+            onToggleFullScreen={onToggleFullScreen}
+            animationValue={animationValue}
+            showControls={_showControls}
+            autoplay={autoplay}
+            disableSeek={disableSeek}
+            setIsPlaying={setIsPlaying}
+            onSeek={seek}
+            controlsTimeoutId={controlsTimeoutRef.current}
+            isControlsVisible={isControlsVisible}
+          />
         </View>
       ),
       [
-        customStyles.videoWrapper,
-        customStyles.video,
+        customStyles,
         props,
         getSizeStyles,
         style,
@@ -616,14 +425,20 @@ const VideoPlayerComponent = forwardRef(
         source,
         resizeMode,
         _onPlaybackStateChanged,
-        isControlsVisible,
-        renderControls,
-        renderSeekBar,
-        _showControls,
-        pauseOnPress,
+        showDuration,
+        disableFullscreen,
+        duration,
         _onPlayPress,
-        fullScreenOnLongPress,
+        _onMutePress,
         onToggleFullScreen,
+        animationValue,
+        _showControls,
+        autoplay,
+        disableSeek,
+        seek,
+        isControlsVisible,
+        pauseOnPress,
+        fullScreenOnLongPress,
       ]
     );
 
@@ -632,7 +447,7 @@ const VideoPlayerComponent = forwardRef(
       if (!isStarted && thumbnail) return renderThumbnail(thumbnail);
       if (!isStarted)
         return (
-          <View style={[styles.preloadingPlaceholder, getSizeStyles(), style]}>
+          <View style={[styles.preloadingPlaceholder, getSizeStyles, style]}>
             {renderStartButton()}
           </View>
         );
@@ -696,61 +511,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  playControl: {
-    color: 'white',
-    padding: 8,
-  },
-  extraControl: {
-    color: 'white',
-    padding: 8,
-  },
-  seekBar: {
-    alignItems: 'center',
-    height: 30,
-    flexGrow: 1,
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    marginLeft: -10,
-    marginRight: -5,
-  },
-  seekBarFullWidth: {
-    marginLeft: 0,
-    marginRight: 0,
-    paddingHorizontal: 0,
-    marginTop: -3,
-    height: 3,
-  },
-  seekBarProgress: {
-    height: 3,
-    backgroundColor: '#F00',
-  },
-  seekBarKnob: {
-    width: 20,
-    height: 20,
-    marginHorizontal: -8,
-    marginVertical: -10,
-    borderRadius: 10,
-    backgroundColor: '#F00',
-    transform: [{ scale: 0.8 }],
-    zIndex: 1,
-  },
-  seekBarKnobSeeking: {
-    transform: [{ scale: 1 }],
-  },
-  seekBarBackground: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    height: 3,
-  },
   overlayButton: {
     ...StyleSheet.absoluteFillObject,
-  },
-  activeDurationText: {
-    paddingLeft: 8,
-    paddingRight: 0,
-    paddingBottom: 0,
-    paddingTop: 0,
-  },
-  durationText: {
-    color: 'white',
   },
 });
