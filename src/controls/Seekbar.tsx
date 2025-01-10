@@ -17,7 +17,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { ProgressRef } from '../Controls';
+import type { ProgressRef } from './Controls';
 
 const parsePadding = (value: DimensionValue, layoutWidth: number) => {
   if (typeof value === 'number') return value;
@@ -35,6 +35,7 @@ export interface SeekbarProps {
   disableSeek: VideoPlayerComponentProps['disableSeek'];
   showControls: () => void;
   onSeek: (progress: number) => void;
+  onSeeking: (progress: number) => void;
   controlsTimeoutId: NodeJS.Timeout | null;
   duration: number;
   // custom styles
@@ -58,6 +59,7 @@ export const Seekbar = memo(
         showControls,
         controlsTimeoutId,
         onSeek,
+        onSeeking,
         duration,
         seekBarCustomStyles,
         seekBarFullWidthCustomStyles,
@@ -68,13 +70,11 @@ export const Seekbar = memo(
       },
       ref
     ) => {
-      const [tmpProgress, setTmpProgress] = useState<number | null>(null);
       const [progress, setProgress] = useState(0);
       const [isSeeking, setIsSeeking] = useState(false);
 
       useImperativeHandle(ref, () => ({
         onProgress: setProgress,
-        isSeeking,
       }));
 
       const seekBarWidth = useRef<number>(200);
@@ -105,7 +105,7 @@ export const Seekbar = memo(
       const _onSeekGrant = useCallback(
         (e: GestureResponderEvent) => {
           seekTouchStart.current = e.nativeEvent.pageX;
-          seekProgressStart.current = progress;
+          seekProgressStart.current = progress ?? 0;
           wasPlayingBeforeSeek.current = isPlaying;
           setIsSeeking(true);
           setIsPlaying(false);
@@ -117,9 +117,9 @@ export const Seekbar = memo(
       const _onSeekRelease = useCallback(() => {
         setIsSeeking(false);
         setIsPlaying(wasPlayingBeforeSeek.current);
+        onSeek(progress * duration);
         showControls();
-        setTmpProgress(null);
-      }, [showControls, setIsPlaying]);
+      }, [duration, onSeek, progress, setIsPlaying, showControls]);
 
       const _onSeek = useCallback(
         (e: GestureResponderEvent) => {
@@ -127,12 +127,10 @@ export const Seekbar = memo(
           const ratio = 100 / seekBarWidth.current;
           const newProgress = seekProgressStart.current + (ratio * diff) / 100;
           const fixedProgress = Math.min(Math.max(newProgress, 0), 1);
-
+          onSeeking(fixedProgress);
           setProgress(fixedProgress);
-          onSeek(newProgress * duration);
-          setTmpProgress(newProgress);
         },
-        [duration, onSeek]
+        [onSeeking]
       );
 
       return (
@@ -147,7 +145,7 @@ export const Seekbar = memo(
         >
           <View
             style={[
-              !isNaN(progress) ? { flexGrow: tmpProgress ?? progress } : null,
+              !isNaN(progress ?? 0) ? { flexGrow: progress ?? 0 } : null,
               styles.seekBarProgress,
               seekBarProgressCustomStyles,
             ]}

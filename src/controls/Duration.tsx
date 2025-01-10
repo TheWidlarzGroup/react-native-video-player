@@ -1,7 +1,7 @@
-import { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, memo, useImperativeHandle, useState } from 'react';
 import type { CustomStyles } from 'react-native-video-player';
 import { StyleSheet, Text } from 'react-native';
-import type { ProgressRef } from '../Controls';
+import type { ProgressRef } from './Controls';
 
 const getDurationTime = (duration: number): string => {
   const padTimeValueString = (value: number): string =>
@@ -28,9 +28,7 @@ const ProgressingDuration = forwardRef<
   const [progress, setProgress] = useState(0);
 
   useImperativeHandle(ref, () => ({
-    onProgress: (progress) => {
-      setProgress(progress);
-    },
+    onProgress: setProgress,
   }));
   return (
     <Text style={[styles.durationText, durationTextCustomStyles]}>
@@ -47,18 +45,10 @@ export const DurationText = memo(
       durationTextCustomStyles: CustomStyles['durationText'];
     }
   >(({ duration, durationTextCustomStyles }, ref) => {
-    const progressRef = useRef<ProgressRef>(null);
-
-    useImperativeHandle(ref, () => ({
-      onProgress: (progress) => {
-        progressRef.current?.onProgress(progress);
-      },
-    }));
-
     return (
       <>
         <ProgressingDuration
-          ref={progressRef}
+          ref={ref}
           duration={duration}
           durationTextCustomStyles={durationTextCustomStyles}
         />

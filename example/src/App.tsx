@@ -54,11 +54,6 @@ const App = () => {
           onError={(e) => console.log(e)}
           showDuration={true}
           ref={playerRef}
-          customStyles={{
-            videoWrapper: {
-              backgroundColor: 'red',
-            },
-          }}
         />
         <View style={styles.btnContainer}>
           <Button onPress={() => playerRef.current?.stop()} title="Stop" />

@@ -1,13 +1,14 @@
 import { Animated, StyleSheet } from 'react-native';
-import type { VideoPlayerComponentProps } from './index';
+import type { VideoPlayerComponentProps } from '../index';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
-import { DurationText } from './controls/Duration';
-import { Seekbar, type SeekbarProps } from './controls/Seekbar';
-import { PlayButton } from './controls/PlayButton';
-import { Mute } from './controls/Mute';
-import { Fullscreen } from './controls/Fullscreen';
+import { DurationText } from './Duration';
+import { Seekbar, type SeekbarProps } from './Seekbar';
+import { PlayButton } from './PlayButton';
+import { Mute } from './Mute';
+import { Fullscreen } from './Fullscreen';
 
-interface ControlsProps extends Omit<SeekbarProps, 'customStyles'> {
+interface ControlsProps
+  extends Omit<SeekbarProps, 'customStyles' | 'onSeeking'> {
   customStyles: VideoPlayerComponentProps['customStyles'];
   showDuration: VideoPlayerComponentProps['showDuration'];
   disableFullscreen: VideoPlayerComponentProps['disableFullscreen'];
@@ -23,10 +24,6 @@ interface ControlsProps extends Omit<SeekbarProps, 'customStyles'> {
 
 export interface ProgressRef {
   onProgress: (progress: number) => void;
-}
-
-export interface ControlsRef extends ProgressRef {
-  isSeeking: boolean;
 }
 
 export const Controls = forwardRef<ProgressRef, ControlsProps>(
@@ -49,14 +46,13 @@ export const Controls = forwardRef<ProgressRef, ControlsProps>(
     ref
   ) => {
     const durationRef = useRef<ProgressRef>(null);
-    const seekbarRef = useRef<ControlsRef>(null);
+    const seekbarRef = useRef<ProgressRef>(null);
 
     useImperativeHandle(ref, () => ({
       onProgress: (progress) => {
         durationRef.current?.onProgress(progress);
         seekbarRef.current?.onProgress(progress);
       },
-      isSeeking: seekbarRef.current?.isSeeking,
     }));
 
     const controlsTranslateY = animationValue.interpolate({
@@ -70,6 +66,7 @@ export const Controls = forwardRef<ProgressRef, ControlsProps>(
           fullWidth={true}
           ref={seekbarRef}
           {...seekbarProps}
+          onSeeking={(progress) => durationRef.current?.onProgress(progress)}
           isPlaying={isPlaying}
           controlsTimeoutId={controlsTimeoutId}
           duration={duration}
@@ -98,8 +95,10 @@ export const Controls = forwardRef<ProgressRef, ControlsProps>(
           onPlayPress={onPlayPress}
         />
         <Seekbar
+          fullWidth={!isControlsVisible}
           ref={seekbarRef}
           {...seekbarProps}
+          onSeeking={(progress) => durationRef.current?.onProgress(progress)}
           isPlaying={isPlaying}
           controlsTimeoutId={controlsTimeoutId}
           duration={duration}

@@ -8,7 +8,7 @@ import {
   useMemo,
 } from 'react';
 import {
-  ImageBackground,
+  Animated,
   Platform,
   StyleSheet,
   TouchableOpacity,
@@ -18,9 +18,7 @@ import {
   type StyleProp,
   type ViewStyle,
   type TextStyle,
-  Image,
   type ImageStyle,
-  Animated,
 } from 'react-native';
 import Video, {
   ResizeMode,
@@ -31,7 +29,8 @@ import Video, {
   type ReactVideoSource,
   type OnPlaybackStateChangedData,
 } from 'react-native-video';
-import { Controls, type ControlsRef } from './Controls';
+import { Controls, type ProgressRef } from './controls/Controls';
+import { StartButton, Thumbnail } from './Thumbnail';
 
 export type VideoPlayerRef = VideoRef & { stop: () => void };
 
@@ -139,7 +138,7 @@ const VideoPlayerComponent = forwardRef(
     // ref to keeps progress to avoid re-rendering
     const progressRef = useRef<number>(0);
     // ref to pass progress to controls (in ref to avoid re-rendering)
-    const controlsRef = useRef<ControlsRef>(null);
+    const controlsRef = useRef<ProgressRef>(null);
     // ref to keep timeout id to clear it on unmount
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -194,6 +193,7 @@ const VideoPlayerComponent = forwardRef(
 
         runControlsAnimation(0.1, () => {
           setIsControlsVisible(false);
+          setProgress(progressRef.current);
         });
       }, controlsTimeout);
     }, [
@@ -201,6 +201,7 @@ const VideoPlayerComponent = forwardRef(
       onHideControls,
       disableControlsAutoHide,
       runControlsAnimation,
+      setProgress,
     ]);
 
     const _showControls = useCallback(() => {
@@ -253,8 +254,6 @@ const VideoPlayerComponent = forwardRef(
 
     const _onProgress = useCallback(
       (event: OnProgressData) => {
-        if (controlsRef.current?.isSeeking) return;
-
         if (onProgress) onProgress(event);
 
         if (isNaN(props?.duration || 0) && isNaN(duration)) {
@@ -328,38 +327,6 @@ const VideoPlayerComponent = forwardRef(
         setProgress(progress / (props.duration || duration));
       },
       [duration, props.duration, setProgress]
-    );
-
-    const renderStartButton = useCallback(
-      () => (
-        <TouchableOpacity
-          style={[styles.playButton, customStyles.playButton]}
-          onPress={_onStart}
-        >
-          <Image
-            source={require('./img/play.png')}
-            style={[styles.playArrow, customStyles.playArrow]}
-          />
-        </TouchableOpacity>
-      ),
-      [_onStart, customStyles.playArrow, customStyles.playButton]
-    );
-
-    const renderThumbnail = useCallback(
-      (thumbnailSource: ImageSourcePropType) => (
-        <ImageBackground
-          source={thumbnailSource}
-          style={[
-            styles.thumbnail,
-            getSizeStyles,
-            style,
-            customStyles.thumbnail,
-          ]}
-        >
-          {renderStartButton()}
-        </ImageBackground>
-      ),
-      [getSizeStyles, renderStartButton, style, customStyles.thumbnail]
     );
 
     const renderVideo = useCallback(
@@ -443,24 +410,42 @@ const VideoPlayerComponent = forwardRef(
     );
 
     const renderContent = useCallback(() => {
-      if (hasEnded && endThumbnail) return renderThumbnail(endThumbnail);
-      if (!isStarted && thumbnail) return renderThumbnail(thumbnail);
+      if ((hasEnded && endThumbnail) || (!isStarted && thumbnail))
+        return (
+          <Thumbnail
+            thumbnailSource={
+              hasEnded && endThumbnail ? endThumbnail : thumbnail!
+            }
+            style={style}
+            sizeStyles={getSizeStyles}
+            onStart={_onStart}
+            customStylesThumbnail={customStyles.thumbnail}
+            customStylesPlayButton={customStyles.playButton}
+            customStylesPlayArrow={customStyles.playArrow}
+          />
+        );
       if (!isStarted)
         return (
           <View style={[styles.preloadingPlaceholder, getSizeStyles, style]}>
-            {renderStartButton()}
+            <StartButton
+              onStart={_onStart}
+              customStylesPlayButton={customStyles.playButton}
+              customStylesPlayArrow={customStyles.playArrow}
+            />
           </View>
         );
       return renderVideo();
     }, [
       hasEnded,
       endThumbnail,
+      style,
+      getSizeStyles,
+      _onStart,
+      customStyles.thumbnail,
+      customStyles.playButton,
+      customStyles.playArrow,
       isStarted,
       thumbnail,
-      renderThumbnail,
-      getSizeStyles,
-      style,
-      renderStartButton,
       renderVideo,
     ]);
 
@@ -479,24 +464,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  thumbnail: {
-    backgroundColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playButton: {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 32,
-    width: 64,
-    height: 64,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  playArrow: {
-    width: 28,
-    height: 28,
-    marginLeft: 2,
   },
   video:
     +Platform.Version >= 24
