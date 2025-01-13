@@ -10,13 +10,13 @@ const FIELD_MAPPINGS = {
 };
 
 const PLATFORM_LABELS = {
-  iOS: 'Platform: iOS',
-  visionOS: 'Platform: iOS',
+  'iOS': 'Platform: iOS',
+  'visionOS': 'Platform: iOS',
   'Apple tvOS': 'Platform: Apple tvOS',
-  Android: 'Platform: Android',
+  'Android': 'Platform: Android',
   'Android TV': 'Platform: Android TV',
-  Windows: 'Platform: Windows',
-  web: 'Platform: Web',
+  'Windows': 'Platform: Windows',
+  'web': 'Platform: Web',
 };
 
 const BOT_LABELS = [
@@ -37,7 +37,7 @@ const MESSAGE = {
     return `Thank you for your issue report. Please note that the following information is missing or incomplete:\n\n${missingFields
       .map((field) => `- ${field.replace('missing-', '')}`)
       .join(
-        '\n',
+        '\n'
       )}\n\nPlease update your issue with this information to help us address it more effectively.
       \n > Note: issues without complete information have a lower priority`;
   },
@@ -54,7 +54,7 @@ const MESSAGE = {
 const checkLatestVersion = async () => {
   try {
     const response = await fetch(
-      'https://registry.npmjs.org/react-native-video/latest',
+      'https://registry.npmjs.org/react-native-video/latest'
     );
     const data = await response.json();
     return data.version;
@@ -128,14 +128,14 @@ const validateBugReport = async (body, labels) => {
       invalidValue:
         'What version of the system is using device that you are experiencing the issue?',
     },
-    {name: 'DeviceType'},
-    {name: 'Architecture'},
-    {name: 'Description', invalidValue: 'A bug happened!'},
-    {name: 'Reproduction', invalidValue: 'Step to reproduce this bug are:'},
-    {name: 'ReproductionLink', invalidValue: 'repository link'},
+    { name: 'DeviceType' },
+    { name: 'Architecture' },
+    { name: 'Description', invalidValue: 'A bug happened!' },
+    { name: 'Reproduction', invalidValue: 'Step to reproduce this bug are:' },
+    { name: 'ReproductionLink', invalidValue: 'repository link' },
   ];
 
-  fields.forEach(({name, invalidValue}) => {
+  fields.forEach(({ name, invalidValue }) => {
     const value = getFieldValue(body, name);
     if (!value || value === invalidValue) {
       const fieldName = FIELD_MAPPINGS[name];
@@ -148,9 +148,9 @@ const validateFeatureRequest = (body, labels) => {
   // Implement feature request validation logic here
 };
 
-const handleIssue = async ({github, context}) => {
-  const {issue} = context.payload;
-  const {body} = issue;
+const handleIssue = async ({ github, context }) => {
+  const { issue } = context.payload;
+  const { body } = issue;
   const labels = new Set(issue.labels.map((label) => label.name));
 
   if (labels.has(SKIP_LABEL)) {
@@ -165,40 +165,40 @@ const handleIssue = async ({github, context}) => {
   const isFeature = labels.has('feature');
 
   if (isFeature) {
-    await handleFeatureRequest({github, context, body, labels});
+    await handleFeatureRequest({ github, context, body, labels });
   } else if (isBug) {
-    await handleBugReport({github, context, body, labels});
+    await handleBugReport({ github, context, body, labels });
   } else {
     console.warn('Issue is not a bug or feature request');
   }
 
-  await updateIssueLabels({github, context, labels});
+  await updateIssueLabels({ github, context, labels });
 };
 
-const handleFeatureRequest = async ({github, context, body, labels}) => {
+const handleFeatureRequest = async ({ github, context, body, labels }) => {
   validateFeatureRequest(body, labels);
 
   const comment = MESSAGE.FEATURE_REQUEST;
-  await createComment({github, context, body: comment});
+  await createComment({ github, context, body: comment });
 };
 
-const handleBugReport = async ({github, context, body, labels}) => {
+const handleBugReport = async ({ github, context, body, labels }) => {
   await validateBugReport(body, labels);
 
   if (Array.from(labels).some((label) => label.startsWith('missing-'))) {
-    await handleMissingInformation({github, context, labels});
+    await handleMissingInformation({ github, context, labels });
   } else {
-    await handleValidReport({github, context, labels});
+    await handleValidReport({ github, context, labels });
   }
 };
 
-const handleMissingInformation = async ({github, context, labels}) => {
+const handleMissingInformation = async ({ github, context, labels }) => {
   const missingFields = Array.from(labels).filter((label) =>
-    label.startsWith('missing-'),
+    label.startsWith('missing-')
   );
 
   const outdatedVersionLabel = Array.from(labels).find((label) =>
-    label.startsWith('outdated-version'),
+    label.startsWith('outdated-version')
   );
 
   if (missingFields.length > 0) {
@@ -208,22 +208,22 @@ const handleMissingInformation = async ({github, context, labels}) => {
       const [, , issueVersion, latestVersion] = outdatedVersionLabel.split('-');
       comment += `\n\n ${MESSAGE.OUTDATED_VERSION(
         issueVersion,
-        latestVersion,
+        latestVersion
       )}`;
     }
 
-    await hidePreviousComments({github, context});
-    await createComment({github, context, body: comment});
+    await hidePreviousComments({ github, context });
+    await createComment({ github, context, body: comment });
   }
 
   updateLabelsForMissingInfo(labels);
 };
 
-const handleValidReport = async ({github, context, labels}) => {
+const handleValidReport = async ({ github, context, labels }) => {
   let comment = MESSAGE.BUG_REPORT;
 
   const outdatedVersionLabel = Array.from(labels).find((label) =>
-    label.startsWith('outdated-version'),
+    label.startsWith('outdated-version')
   );
 
   if (outdatedVersionLabel) {
@@ -232,13 +232,13 @@ const handleValidReport = async ({github, context, labels}) => {
     labels.add('Newer Version Available');
   }
 
-  await hidePreviousComments({github, context});
-  await createComment({github, context, body: comment});
+  await hidePreviousComments({ github, context });
+  await createComment({ github, context, body: comment });
   labels.add('Repro Provided');
   labels.add('Waiting for Review');
 };
 
-const createComment = async ({github, context, body}) => {
+const createComment = async ({ github, context, body }) => {
   await github.rest.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -247,9 +247,9 @@ const createComment = async ({github, context, body}) => {
   });
 };
 
-const updateIssueLabels = async ({github, context, labels}) => {
+const updateIssueLabels = async ({ github, context, labels }) => {
   const labelsToAdd = Array.from(labels).filter(
-    (label) => !label.startsWith('missing-') && !label.startsWith('outdated-'),
+    (label) => !label.startsWith('missing-') && !label.startsWith('outdated-')
   );
 
   await github.rest.issues.update({
@@ -260,19 +260,23 @@ const updateIssueLabels = async ({github, context, labels}) => {
   });
 };
 
-const hidePreviousComments = async ({github, context}) => {
+const hidePreviousComments = async ({ github, context }) => {
   const comments = await github.rest.issues.listComments({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.payload.issue.number,
   });
 
-  const botComments = comments.data.filter(
-    (comment) => comment.user.type === 'Bot',
+  // Filter for bot comments that aren't already hidden
+  const unhiddenBotComments = comments.data.filter(
+    (comment) =>
+      comment.user.type === 'Bot' &&
+      !comment.body.includes('<details>') &&
+      !comment.body.includes('Previous bot comment')
   );
 
-  for (const comment of botComments) {
-    // Don't format string - it will broke the markdown
+  for (const comment of unhiddenBotComments) {
+    // Don't format string - it will break the markdown
     const hiddenBody = `
 <details>
 <summary>Previous bot comment (click to expand)</summary>
