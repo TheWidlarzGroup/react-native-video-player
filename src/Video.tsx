@@ -1,5 +1,6 @@
 import {
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -14,13 +15,8 @@ import Video, {
   type VideoRef,
 } from 'react-native-video';
 import { Controls, type ProgressRef } from './controls/Controls';
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import type { AnimationRef } from './controls/ControlsAnimatedWrapper';
 
 export interface VideoInternalRef extends VideoRef {
   onStart: () => void;
@@ -56,8 +52,8 @@ type RenderVideoProps = Pick<
   | 'style'
 > & { sizeStyle: { width: number; height: number } };
 
-export const RenderVideo = forwardRef<VideoInternalRef, RenderVideoProps>(
-  (props, ref) => {
+export const RenderVideo = memo(
+  forwardRef<VideoInternalRef, RenderVideoProps>((props, ref) => {
     const {
       animationDuration = 100,
       autoplay = false,
@@ -95,23 +91,10 @@ export const RenderVideo = forwardRef<VideoInternalRef, RenderVideoProps>(
     const videoRef = useRef<VideoRef>(null);
     // ref to keeps progress to avoid re-rendering
     const progressRef = useRef<number>(0);
-    // ref to pass progress to controls (in ref to avoid re-rendering)
-    const controlsRef = useRef<ProgressRef>(null);
+    // ref to pass progress to controls (in ref to avoid re-rendering) and to pass when controls wrapper should animate
+    const controlsRef = useRef<ProgressRef & AnimationRef>(null);
     // ref to keep timeout id to clear it on unmount
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    const animationValue = useRef(new Animated.Value(0)).current;
-
-    const runControlsAnimation = useCallback(
-      (toValue: number, callback?: () => void) => {
-        Animated.timing(animationValue, {
-          toValue,
-          duration: animationDuration,
-          useNativeDriver: true,
-        }).start(callback);
-      },
-      [animationDuration, animationValue]
-    );
 
     const setProgress = useCallback((progress: number) => {
       progressRef.current = progress;
@@ -146,38 +129,25 @@ export const RenderVideo = forwardRef<VideoInternalRef, RenderVideoProps>(
         if (onHideControls) onHideControls();
         if (disableControlsAutoHide) return;
 
-        runControlsAnimation(0.1, () => {
+        controlsRef.current?.runControlsAnimation(0.1, () => {
           setIsControlsVisible(false);
           setProgress(progressRef.current);
         });
       }, controlsTimeout);
-    }, [
-      controlsTimeout,
-      onHideControls,
-      disableControlsAutoHide,
-      runControlsAnimation,
-      setProgress,
-    ]);
+    }, [controlsTimeout, onHideControls, disableControlsAutoHide, setProgress]);
 
     const _showControls = useCallback(() => {
       if (onShowControls && !isControlsVisible) onShowControls();
       setIsControlsVisible(true);
 
-      runControlsAnimation(1);
-
       _hideControls();
 
-      // force re-render to update progress, because setProgress was called when controls are hidden. It fixes the moment when controls are hidden during paused video. After clicking on the screen, controls are shown, but the current duration shows 00.
+      // force re-renders to make sure controls are mounted. ControlsRef is then available and setProgress is called correctly (It fixes the moment when controls are hidden during paused video. After clicking on the screen, controls are shown, but the current duration shows 00)
       setTimeout(() => {
         setProgress(progressRef.current);
+        controlsRef.current?.runControlsAnimation(1);
       }, 0);
-    }, [
-      onShowControls,
-      isControlsVisible,
-      runControlsAnimation,
-      _hideControls,
-      setProgress,
-    ]);
+    }, [onShowControls, isControlsVisible, _hideControls, setProgress]);
 
     useEffect(() => {
       if (autoplay) _hideControls();
@@ -293,7 +263,7 @@ export const RenderVideo = forwardRef<VideoInternalRef, RenderVideoProps>(
           onPlayPress={_onPlayPress}
           onMutePress={_onMutePress}
           onToggleFullScreen={onToggleFullScreen}
-          animationValue={animationValue}
+          animationDuration={animationDuration}
           showControls={_showControls}
           autoplay={autoplay}
           disableSeek={disableSeek}
@@ -304,7 +274,7 @@ export const RenderVideo = forwardRef<VideoInternalRef, RenderVideoProps>(
         />
       </View>
     );
-  }
+  })
 );
 
 const styles = StyleSheet.create({
