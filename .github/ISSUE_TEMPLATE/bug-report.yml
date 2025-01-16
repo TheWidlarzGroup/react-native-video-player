@@ -11,7 +11,15 @@ body:
   - type: input
     id: version
     attributes:
-      label: Version
+      label: Version of react-native-video-player
+      description: What version are you using? Put the exact version from your package.json
+    validations:
+      required: true
+
+  - type: input
+    id: rnv-version
+    attributes:
+      label: Version of react-native-video
       description: What version are you using? Put the exact version from your package.json
     validations:
       required: true
