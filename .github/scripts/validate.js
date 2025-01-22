@@ -267,12 +267,16 @@ const hidePreviousComments = async ({ github, context }) => {
     issue_number: context.payload.issue.number,
   });
 
-  const botComments = comments.data.filter(
-    (comment) => comment.user.type === 'Bot'
+  // Filter for bot comments that aren't already hidden
+  const unhiddenBotComments = comments.data.filter(
+    (comment) =>
+      comment.user.type === 'Bot' &&
+      !comment.body.includes('<details>') &&
+      !comment.body.includes('Previous bot comment')
   );
 
-  for (const comment of botComments) {
-    // Don't format string - it will broke the markdown
+  for (const comment of unhiddenBotComments) {
+    // Don't format string - it will break the markdown
     const hiddenBody = `
 <details>
 <summary>Previous bot comment (click to expand)</summary>
