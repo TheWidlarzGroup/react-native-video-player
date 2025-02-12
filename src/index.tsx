@@ -179,6 +179,9 @@ const VideoPlayerComponent = forwardRef<
       <RenderVideo
         ref={videoRef}
         {...rest}
+        style={style}
+        customStyles={customStyles}
+        autoplay={autoplay}
         onEnd={_onEnd}
         sizeStyle={sizeStyles}
       />
@@ -191,10 +194,9 @@ const VideoPlayerComponent = forwardRef<
     style,
     sizeStyles,
     _onStart,
-    customStyles.thumbnail,
-    customStyles.playButton,
-    customStyles.playArrow,
+    customStyles,
     rest,
+    autoplay,
     _onEnd,
   ]);
 

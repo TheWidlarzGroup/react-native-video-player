@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   ActivityIndicator,
   StyleSheet,
-  Platform,
 } from 'react-native';
 import VideoPlayer, { type VideoPlayerRef } from 'react-native-video-player';
 import { ReactScan } from 'react-scan/native';
@@ -19,7 +18,7 @@ const App = () => {
     <SafeAreaView>
       <ReactScan
         options={{
-          enabled: Platform.OS === 'ios',
+          enabled: false,
         }}
       >
         <Text style={{ fontSize: 22, marginTop: 22 }}>
