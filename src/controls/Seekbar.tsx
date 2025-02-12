@@ -5,10 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import type {
-  CustomStyles,
-  VideoPlayerComponentProps,
-} from 'react-native-video-player';
+import type { CustomStyles, VideoPlayerProps } from 'react-native-video-player';
 import {
   forwardRef,
   memo,
@@ -28,11 +25,11 @@ const parsePadding = (value: DimensionValue, layoutWidth: number) => {
 };
 
 export interface SeekbarProps {
-  autoplay: VideoPlayerComponentProps['autoplay'];
+  autoplay: VideoPlayerProps['autoplay'];
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
   fullWidth?: boolean;
-  disableSeek: VideoPlayerComponentProps['disableSeek'];
+  disableSeek: VideoPlayerProps['disableSeek'];
   showControls: () => void;
   onSeek: (progress: number) => void;
   onSeeking: (progress: number) => void;

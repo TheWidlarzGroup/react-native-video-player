@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import type { CustomStyles, VideoPlayerComponentProps } from './index';
+import type { CustomStyles, VideoPlayerProps } from './index';
 import { memo } from 'react';
 
 interface StartButtonProps {
@@ -16,7 +16,7 @@ interface StartButtonProps {
 
 interface ThumbnailProps extends StartButtonProps {
   thumbnailSource: ImageSourcePropType;
-  style: VideoPlayerComponentProps['style'];
+  style: VideoPlayerProps['style'];
   sizeStyles: { height: number; width: number };
   onStart: () => void;
   customStylesThumbnail: CustomStyles['thumbnail'];
