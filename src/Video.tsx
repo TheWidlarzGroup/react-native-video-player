@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import type { VideoPlayerComponentProps } from './index';
+import type { VideoPlayerProps } from './index';
 import Video, {
   type OnLoadData,
   type OnPlaybackStateChangedData,
@@ -23,7 +23,7 @@ export interface VideoInternalRef extends VideoRef {
 }
 
 type RenderVideoProps = Pick<
-  VideoPlayerComponentProps,
+  VideoPlayerProps,
   | 'animationDuration'
   | 'autoplay'
   | 'controlsTimeout'
