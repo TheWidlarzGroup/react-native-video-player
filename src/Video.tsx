@@ -97,6 +97,8 @@ export const RenderVideo = memo(
     const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const setProgress = useCallback((progress: number) => {
+      if (!isFinite(progress)) return;
+
       progressRef.current = progress;
       controlsRef.current?.onProgress(progress);
     }, []);
