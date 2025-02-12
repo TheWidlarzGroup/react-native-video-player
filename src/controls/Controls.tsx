@@ -1,4 +1,4 @@
-import type { VideoPlayerComponentProps } from '../index';
+import type { VideoPlayerProps } from '../index';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { DurationText } from './Duration';
 import { Seekbar, type SeekbarProps } from './Seekbar';
@@ -9,9 +9,9 @@ import { AnimatedWrapper, type AnimationRef } from './ControlsAnimatedWrapper';
 
 interface ControlsProps
   extends Omit<SeekbarProps, 'customStyles' | 'onSeeking'> {
-  customStyles: VideoPlayerComponentProps['customStyles'];
-  showDuration: VideoPlayerComponentProps['showDuration'];
-  disableFullscreen: VideoPlayerComponentProps['disableFullscreen'];
+  customStyles: VideoPlayerProps['customStyles'];
+  showDuration: VideoPlayerProps['showDuration'];
+  disableFullscreen: VideoPlayerProps['disableFullscreen'];
   animationDuration: number;
   duration: number;
   isPlaying: boolean;
