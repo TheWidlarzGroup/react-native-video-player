@@ -60,7 +60,7 @@
   "bugs": {
     "url": "https://github.com/TheWidlarzGroup/react-native-video-player/issues"
   },
-  "homepage": "https://github.com/TheWidlarzGroup/react-native-video-player#readme",
+  "homepage": "https://docs.thewidlarzgroup.com/react-native-video-player/",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
