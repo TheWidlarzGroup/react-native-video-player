@@ -49,7 +49,10 @@ The `react-native-video-player` component allows you to customize its appearance
 - **Description**: Styles the background of the seek bar.
 
 ### `thumbnail`
-- **Description**: Styles the video thumbnail shown before playback starts.
+- **Description**: Styles the video thumbnail container shown before playback starts.
+
+### `thumbnailImage`
+- **Description**: Styles the video thumbnail image shown before playback starts.
 
 ### `playButton`
 - **Description**: Styles the start button overlaying the thumbnail.
@@ -81,6 +84,7 @@ const App = () => (
         wrapper: styles.wrapper,
         playControl: styles.playControl,
         seekBarKnob: styles.seekBarKnob,
+        thumbnailImage: styles.thumbnailImage
       }}
     />
   </View>
@@ -94,6 +98,10 @@ const styles = StyleSheet.create({
     // ...
   },
   seekBarKnob: {
+    // ...
+  },
+  thumbnailImage: {
+    resizeMode: 'contain',
     // ...
   },
 });

@@ -47,6 +47,7 @@ export interface CustomStyles {
   seekBarKnobSeeking?: StyleProp<ViewStyle>;
   seekBarBackground?: StyleProp<ViewStyle>;
   thumbnail?: StyleProp<ViewStyle>;
+  thumbnailImage?: StyleProp<ImageStyle>;
   playButton?: StyleProp<ViewStyle>;
   playArrow?: StyleProp<ImageStyle>;
   durationText?: StyleProp<TextStyle>;
@@ -146,8 +147,8 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
     }, [onEnd, endWithThumbnail, endThumbnail, setIsStarted, setHasEnded]);
 
     const onLayout = useCallback((event: LayoutChangeEvent) => {
-      const { width } = event.nativeEvent.layout;
-      setWidth(width);
+      const { width: containerWidth } = event.nativeEvent.layout;
+      setWidth(containerWidth);
     }, []);
 
     const renderContent = useCallback(() => {
@@ -161,6 +162,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
             sizeStyles={sizeStyles}
             onStart={_onStart}
             customStylesThumbnail={customStyles.thumbnail}
+            customStylesThumbnailImage={customStyles.thumbnailImage}
             customStylesPlayButton={customStyles.playButton}
             customStylesPlayArrow={customStyles.playArrow}
           />
