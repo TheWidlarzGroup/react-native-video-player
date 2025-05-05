@@ -41,6 +41,7 @@ type RenderVideoProps = Pick<
   | 'onLoad'
   | 'onMutePress'
   | 'onPlayPress'
+  | 'onPlaybackStateChanged'
   | 'onProgress'
   | 'onShowControls'
   | 'pauseOnPress'
@@ -71,6 +72,7 @@ export const RenderVideo = memo(
       onLoad,
       onMutePress,
       onPlayPress,
+      onPlaybackStateChanged,
       onProgress,
       onShowControls,
       pauseOnPress,
@@ -212,9 +214,10 @@ export const RenderVideo = memo(
 
     const _onPlaybackStateChanged = useCallback(
       (data: OnPlaybackStateChangedData) => {
+        if (onPlaybackStateChanged) onPlaybackStateChanged(data);
         if (data.isPlaying !== isPlaying) setIsPlaying(data.isPlaying);
       },
-      [isPlaying]
+      [isPlaying, onPlaybackStateChanged]
     );
 
     const onToggleFullScreen = useCallback(() => {

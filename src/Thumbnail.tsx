@@ -20,6 +20,7 @@ interface ThumbnailProps extends StartButtonProps {
   sizeStyles: { height: number; width: number };
   onStart: () => void;
   customStylesThumbnail: CustomStyles['thumbnail'];
+  customStylesThumbnailImage: CustomStyles['thumbnailImage'];
   customStylesPlayButton: CustomStyles['playButton'];
   customStylesPlayArrow: CustomStyles['playArrow'];
 }
@@ -49,12 +50,14 @@ export const Thumbnail = memo(
     sizeStyles,
     onStart,
     customStylesThumbnail,
+    customStylesThumbnailImage,
     customStylesPlayButton,
     customStylesPlayArrow,
   }: ThumbnailProps) => {
     return (
       <ImageBackground
         source={thumbnailSource}
+        imageStyle={customStylesThumbnailImage}
         style={[styles.thumbnail, sizeStyles, style, customStylesThumbnail]}
       >
         <StartButton

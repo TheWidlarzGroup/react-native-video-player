@@ -29,6 +29,11 @@ const App = () => {
           thumbnail={{
             uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg',
           }}
+          customStyles={{
+            thumbnailImage: {
+              resizeMode: 'cover',
+            },
+          }}
           // pauseOnPress={true}
           // autoplay={true}
           // repeat={true}

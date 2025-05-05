@@ -1,9 +1,3 @@
-
-
-# What do you need from the video UI controls library?
-
-As we approach the end of 2024, we've started working on the roadmap for this project. This means it's not dead—it was just waiting for the perfect moment! Please share your enthusiasm and feedback here: [https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186](https://github.com/TheWidlarzGroup/react-native-video-player/discussions/186)
-
 # react-native-video-player
 
 🎥 `<VideoPlayer />` component for React Native with a few controls. This player uses [react-native-video](https://github.com/TheWidlarzGroup/react-native-video) under the hood
