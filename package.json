@@ -17,6 +17,7 @@
       }
     }
   },
+  "types": "./lib/typescript/commonjs/src/index.d.ts",
   "files": [
     "src",
     "lib",
