@@ -106,6 +106,13 @@ The `react-native-video-player` component exposes a wide range of properties to 
 
 ---
 
+### `renderOverlayComponent`
+- **Type**: `function`
+- **Default**: `undefined`
+- **Description**: Renders an overlay component on top of the video, but under controls / play button.
+
+---
+
 ### `resizeMode`
 - **Type**: `string`
 - **Default**: `'contain'`

@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useImperativeHandle,
+  type ReactNode,
 } from 'react';
 import {
   StyleSheet,
@@ -24,6 +25,7 @@ import {
   type ReactVideoProps,
   type ReactVideoSource,
 } from 'react-native-video';
+import { Overlay } from './Overlay';
 import { StartButton, Thumbnail } from './Thumbnail';
 import { RenderVideo, type VideoInternalRef } from './Video';
 
@@ -79,6 +81,7 @@ export interface VideoPlayerProps extends ReactVideoProps {
   onStart?: () => void;
   pauseOnPress?: boolean;
   paused?: boolean;
+  renderOverlayComponent?: () => ReactNode;
   resizeMode?: ResizeMode;
   showDuration?: boolean;
   source: ReactVideoSource;
@@ -97,6 +100,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
       endWithThumbnail,
       onStart,
       onEnd,
+      renderOverlayComponent,
       style,
       thumbnail,
       videoHeight = 1080,
@@ -165,17 +169,21 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
             customStylesThumbnailImage={customStyles.thumbnailImage}
             customStylesPlayButton={customStyles.playButton}
             customStylesPlayArrow={customStyles.playArrow}
+            renderOverlayComponent={renderOverlayComponent}
           />
         );
       if (!isStarted)
         return (
-          <View style={[styles.preloadingPlaceholder, sizeStyles, style]}>
-            <StartButton
-              onStart={_onStart}
-              customStylesPlayButton={customStyles.playButton}
-              customStylesPlayArrow={customStyles.playArrow}
-            />
-          </View>
+          <>
+            <Overlay renderOverlayComponent={renderOverlayComponent} />
+            <View style={[styles.preloadingPlaceholder, sizeStyles, style]}>
+              <StartButton
+                onStart={_onStart}
+                customStylesPlayButton={customStyles.playButton}
+                customStylesPlayArrow={customStyles.playArrow}
+              />
+            </View>
+          </>
         );
       return (
         <RenderVideo
@@ -185,6 +193,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
           customStyles={customStyles}
           autoplay={autoplay}
           onEnd={_onEnd}
+          renderOverlayComponent={renderOverlayComponent}
           sizeStyle={sizeStyles}
         />
       );
@@ -197,6 +206,7 @@ const VideoPlayer = forwardRef<VideoPlayerRef, VideoPlayerProps>(
       sizeStyles,
       _onStart,
       customStyles,
+      renderOverlayComponent,
       rest,
       autoplay,
       _onEnd,
