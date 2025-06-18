@@ -17,6 +17,7 @@ import Video, {
 import { Controls, type ProgressRef } from './controls/Controls';
 import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import type { AnimationRef } from './controls/ControlsAnimatedWrapper';
+import { Overlay } from './Overlay';
 
 export interface VideoInternalRef extends VideoRef {
   onStart: () => void;
@@ -46,6 +47,7 @@ type RenderVideoProps = Pick<
   | 'onShowControls'
   | 'pauseOnPress'
   | 'paused'
+  | 'renderOverlayComponent'
   | 'repeat'
   | 'resizeMode'
   | 'showDuration'
@@ -77,6 +79,7 @@ export const RenderVideo = memo(
       onShowControls,
       pauseOnPress,
       paused,
+      renderOverlayComponent,
       repeat = false,
       resizeMode = 'contain',
       showDuration = false,
@@ -257,6 +260,7 @@ export const RenderVideo = memo(
             if (fullScreenOnLongPress) onToggleFullScreen();
           }}
         />
+        <Overlay renderOverlayComponent={renderOverlayComponent} />
         <Controls
           ref={controlsRef}
           customStyles={customStyles}

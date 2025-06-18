@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import type { CustomStyles, VideoPlayerProps } from './index';
-import { memo } from 'react';
+import { memo, type ReactNode } from 'react';
+import { Overlay } from './Overlay';
 
 interface StartButtonProps {
   onStart: () => void;
@@ -23,6 +24,7 @@ interface ThumbnailProps extends StartButtonProps {
   customStylesThumbnailImage: CustomStyles['thumbnailImage'];
   customStylesPlayButton: CustomStyles['playButton'];
   customStylesPlayArrow: CustomStyles['playArrow'];
+  renderOverlayComponent?: () => ReactNode;
 }
 
 export const StartButton = ({
@@ -53,6 +55,7 @@ export const Thumbnail = memo(
     customStylesThumbnailImage,
     customStylesPlayButton,
     customStylesPlayArrow,
+    renderOverlayComponent,
   }: ThumbnailProps) => {
     return (
       <ImageBackground
@@ -60,6 +63,7 @@ export const Thumbnail = memo(
         imageStyle={customStylesThumbnailImage}
         style={[styles.thumbnail, sizeStyles, style, customStylesThumbnail]}
       >
+        <Overlay renderOverlayComponent={renderOverlayComponent} />
         <StartButton
           customStylesPlayButton={customStylesPlayButton}
           onStart={onStart}
